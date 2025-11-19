@@ -1,0 +1,455 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>JobTracker - Track Your Job Applications</title>
+    <link rel="stylesheet" href="css/style.css" />
+  </head>
+  <body>
+    <!-- Notification System -->
+    <div id="notification" class="notification hidden"></div>
+
+    <header>
+      <div class="container">
+        <div class="header-content">
+          <!-- Left Side: Hamburger and Logo -->
+          <div class="header-left">
+            <button class="hamburger" id="hamburgerBtn">
+              <span></span>
+              <span></span>
+              <span></span>
+            </button>
+            <div class="logo">JobTracker</div>
+          </div>
+
+          <!-- Center: Desktop Navigation -->
+          <nav class="desktop-nav">
+            <ul>
+              <li>
+                <a href="#" class="nav-link active" data-page="dashboard"
+                  >Dashboard</a
+                >
+              </li>
+              <li>
+                <a href="#" class="nav-link" data-page="applications"
+                  >Applications</a
+                >
+              </li>
+              <li>
+                <a href="#" class="nav-link" data-page="statistics"
+                  >Statistics</a
+                >
+              </li>
+            </ul>
+          </nav>
+
+          <!-- Right Side: User/Auth -->
+          <div class="header-right">
+            <div class="auth-buttons">
+              <button class="btn btn-outline" id="loginBtn">Login</button>
+              <button class="btn btn-primary" id="registerBtn">Register</button>
+              <button class="theme-toggle" id="themeToggle">🌙</button>
+              <div id="userMenu" class="user-menu hidden">
+                <span id="userName"></span>
+                <button id="logoutBtn" class="btn btn-outline">Logout</button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Mobile Navigation -->
+    <div class="mobile-nav" id="mobileNav">
+      <nav>
+        <ul>
+          <li>
+            <a href="#" class="mobile-nav-link active" data-page="dashboard"
+              >Dashboard</a
+            >
+          </li>
+          <li>
+            <a href="#" class="mobile-nav-link" data-page="applications"
+              >Applications</a
+            >
+          </li>
+          <li>
+            <a href="#" class="mobile-nav-link" data-page="statistics"
+              >Statistics</a
+            >
+          </li>
+        </ul>
+      </nav>
+
+      <div class="mobile-auth-buttons" id="mobileAuth">
+        <button class="btn btn-primary full-width" id="mobileLoginBtn">
+          Login
+        </button>
+        <button class="btn btn-outline full-width" id="mobileRegisterBtn">
+          Register
+        </button>
+      </div>
+
+      <div class="mobile-user-menu hidden" id="mobileUserMenu">
+        <div class="mobile-user-info">
+          Welcome, <span id="mobileUserName"></span>
+        </div>
+        <button class="btn btn-outline full-width" id="mobileLogoutBtn">
+          Logout
+        </button>
+      </div>
+    </div>
+
+    <main>
+      <div class="container">
+        <!-- Dashboard Page -->
+        <div id="dashboard-page" class="page">
+          <h1>Job Application Dashboard</h1>
+          <p>
+            Welcome to your job application tracker. Keep track of all your
+            applications in one place.
+          </p>
+
+          <div class="stats-cards">
+            <div class="stat-card">
+              <h3 id="total-applications">0</h3>
+              <p>Total Applications</p>
+            </div>
+            <div class="stat-card">
+              <h3 id="this-week">0</h3>
+              <p>This Week</p>
+            </div>
+            <div class="stat-card">
+              <h3 id="interviews">0</h3>
+              <p>Interviews</p>
+            </div>
+            <div class="stat-card">
+              <h3 id="success-rate">0%</h3>
+              <p>Success Rate</p>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h2>Add New Application</h2>
+            <form id="application-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label for="job-title">Job Title *</label>
+                  <input
+                    type="text"
+                    id="job-title"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="company">Company *</label>
+                  <input
+                    type="text"
+                    id="company"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="application-date">Application Date *</label>
+                  <input
+                    type="date"
+                    id="application-date"
+                    class="form-control"
+                    required
+                  />
+                </div>
+                <div class="form-group">
+                  <label for="status">Status *</label>
+                  <select id="status" class="form-control" required>
+                    <option value="applied">Applied</option>
+                    <option value="interview">Interview</option>
+                    <option value="test">Test</option>
+                    <option value="offer">Offer</option>
+                    <option value="rejected">Rejected</option>
+                  </select>
+                </div>
+                <div class="form-group full-width">
+                  <label for="notes">Notes</label>
+                  <textarea id="notes" class="form-control" rows="3"></textarea>
+                </div>
+              </div>
+              <button type="submit" class="btn-submit">Add Application</button>
+            </form>
+          </div>
+
+          <div class="recent-applications">
+            <h2>Recent Applications</h2>
+            <table class="applications-table">
+              <thead>
+                <tr>
+                  <th>Job Title</th>
+                  <th>Company</th>
+                  <th>Date</th>
+                  <th>Status</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody id="recent-applications-body">
+                <!-- Applications will be populated here -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        <!-- Applications Page -->
+        <div id="applications-page" class="page hidden">
+          <h1>All Applications</h1>
+          <div class="filters">
+            <div class="form-group">
+              <label for="status-filter">Filter by Status</label>
+              <select id="status-filter" class="form-control">
+                <option value="all">All</option>
+                <option value="applied">Applied</option>
+                <option value="interview">Interview</option>
+                <option value="test">Test</option>
+                <option value="offer">Offer</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+          </div>
+          <table class="applications-table">
+            <thead>
+              <tr>
+                <th>Job Title</th>
+                <th>Company</th>
+                <th>Date</th>
+                <th>Status</th>
+                <th>Notes</th>
+                <th>Actions</th>
+              </tr>
+            </thead>
+            <tbody id="all-applications-body">
+              <!-- All applications will be populated here -->
+            </tbody>
+          </table>
+        </div>
+
+        <!-- Statistics Page -->
+        <div id="statistics-page" class="page hidden">
+          <h1>Application Statistics</h1>
+          <div class="stats-cards">
+            <div class="stat-card">
+              <h3 id="stats-total">0</h3>
+              <p>Total Applications</p>
+            </div>
+            <div class="stat-card">
+              <h3 id="stats-this-month">0</h3>
+              <p>This Month</p>
+            </div>
+            <div class="stat-card">
+              <h3 id="stats-interview-rate">0%</h3>
+              <p>Interview Rate</p>
+            </div>
+            <div class="stat-card">
+              <h3 id="stats-offer-rate">0%</h3>
+              <p>Offer Rate</p>
+            </div>
+          </div>
+
+          <div class="chart-section">
+            <h2>Applications by Week</h2>
+            <div id="weekly-chart">
+              <canvas id="weeklyChart"></canvas>
+            </div>
+          </div>
+
+          <div class="chart-section">
+            <h2>Applications by Status</h2>
+            <div id="status-chart">
+              <canvas id="statusChart"></canvas>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Login Modal -->
+    <div class="modal" id="loginModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Login</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <form id="login-form">
+          <div class="form-group">
+            <label for="login-email">Email</label>
+            <input
+              type="email"
+              id="login-email"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="login-password">Password</label>
+            <input
+              type="password"
+              id="login-password"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <a href="#" id="forgot-password">Forgot Password?</a>
+          </div>
+          <button type="submit" class="btn-submit full-width">Login</button>
+        </form>
+      </div>
+    </div>
+
+    <!-- Register Modal -->
+    <div class="modal" id="registerModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Register</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <form id="register-form">
+          <div class="form-group">
+            <label for="register-name">Full Name</label>
+            <input
+              type="text"
+              id="register-name"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="register-email">Email</label>
+            <input
+              type="email"
+              id="register-email"
+              class="form-control"
+              required
+            />
+          </div>
+          <div class="form-group">
+            <label for="register-password">Password</label>
+            <input
+              type="password"
+              id="register-password"
+              class="form-control"
+              required
+              minlength="6"
+            />
+          </div>
+          <div class="form-group">
+            <label for="register-confirm">Confirm Password</label>
+            <input
+              type="password"
+              id="register-confirm"
+              class="form-control"
+              required
+            />
+          </div>
+          <button type="submit" class="btn-submit full-width">Register</button>
+        </form>
+      </div>
+    </div>
+
+    <footer>
+      <div class="container">
+        <p>&copy; 2023 JobTracker. All rights reserved.</p>
+      </div>
+    </footer>
+    <!-- Edit Application Modal -->
+    <div class="modal" id="editModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Edit Application</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <form id="edit-application-form">
+          <input type="hidden" id="edit-application-id" />
+          <div class="form-grid">
+            <div class="form-group">
+              <label for="edit-job-title">Job Title *</label>
+              <input
+                type="text"
+                id="edit-job-title"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="edit-company">Company *</label>
+              <input
+                type="text"
+                id="edit-company"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="edit-application-date">Application Date *</label>
+              <input
+                type="date"
+                id="edit-application-date"
+                class="form-control"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="edit-status">Status *</label>
+              <select id="edit-status" class="form-control" required>
+                <option value="applied">Applied</option>
+                <option value="interview">Interview</option>
+                <option value="test">Test</option>
+                <option value="offer">Offer</option>
+                <option value="rejected">Rejected</option>
+              </select>
+            </div>
+            <div class="form-group full-width">
+              <label for="edit-notes">Notes</label>
+              <textarea
+                id="edit-notes"
+                class="form-control"
+                rows="3"
+              ></textarea>
+            </div>
+          </div>
+          <div class="form-actions">
+            <button type="button" class="btn btn-outline" id="cancelEdit">
+              Cancel
+            </button>
+            <button type="submit" class="btn-submit">Update Application</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div class="modal" id="deleteModal">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h2>Confirm Delete</h2>
+          <button class="close-modal">&times;</button>
+        </div>
+        <div class="modal-body">
+          <p>Are you sure you want to delete this application?</p>
+          <p><strong id="delete-app-info"></strong></p>
+        </div>
+        <div class="form-actions">
+          <button type="button" class="btn btn-outline" id="cancelDelete">
+            Cancel
+          </button>
+          <button type="button" class="btn btn-danger" id="confirmDelete">
+            Delete
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script src="js/ui.js"></script>
+    <script src="js/auth.js"></script>
+    <script src="js/app.js"></script>
+  </body>
+</html>
