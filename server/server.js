@@ -7,16 +7,13 @@ require("dotenv").config();
 const app = express();
 
 // Middleware
-// في server.js - عدل الـ CORS middleware
 app.use(
   cors({
-    origin: [
-      "https://jobtracker-pbjx.onrender.com",
-      "http://localhost:3000", // علشان التطوير المحلي
-    ],
+    origin: ["https://jobtracker-ptwj.onrender.com", "http://localhost:3000"],
     credentials: true,
   })
 );
+
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "../public")));
 
