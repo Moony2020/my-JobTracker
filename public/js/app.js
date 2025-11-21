@@ -95,6 +95,7 @@ class ApplicationManager {
     const formData = {
       jobTitle: document.getElementById("job-title").value,
       company: document.getElementById("company").value,
+      location: document.getElementById("location").value,
       date: document.getElementById("application-date").value,
       status: document.getElementById("status").value,
       notes: document.getElementById("notes").value,
@@ -169,6 +170,7 @@ class ApplicationManager {
     const formData = {
       jobTitle: document.getElementById("edit-job-title").value,
       company: document.getElementById("edit-company").value,
+      location: document.getElementById("edit-location").value,
       date: document.getElementById("edit-application-date").value,
       status: document.getElementById("edit-status").value,
       notes: document.getElementById("edit-notes").value,
@@ -460,11 +462,14 @@ class ApplicationManager {
                         <div class="application-item">
                             <span class="app-title">${app.jobTitle}</span>
                             <span class="app-company">at ${app.company}</span>
+                            <span class="app-location">${
+                              app.location ? `in ${app.location}` : ""
+                            }</span>
                             <span class="app-status status-${
                               app.status
                             }">${this.getStatusText(app.status)}</span>
                         </div>
-                    `
+                      `
                       )
                       .join("")}
                 </div>
@@ -552,21 +557,20 @@ class ApplicationManager {
     recentApps.forEach((app) => {
       const row = document.createElement("tr");
       row.innerHTML = `
-                <td>${app.jobTitle}</td>
-                <td>${app.company}</td>
-                <td>${this.formatDate(app.date)}</td>
-                <td><span class="status-badge status-${
-                  app.status
-                }">${this.getStatusText(app.status)}</span></td>
-                <td class="action-buttons">
-                    <button class="btn-action btn-edit" data-id="${
-                      app._id
-                    }">Edit</button>
-                    <button class="btn-action btn-delete" data-id="${
-                      app._id
-                    }">Delete</button>
-                </td>
-            `;
+    <td>${app.jobTitle}</td>
+    <td>${app.company}</td>
+    <td>${app.location || "-"}</td>
+    <td>${this.formatDate(app.date)}</td>
+    <td><span class="status-badge status-${app.status}">${this.getStatusText(
+        app.status
+      )}</span></td>
+    <td class="action-buttons">
+        <button class="btn-action btn-edit" data-id="${app._id}">Edit</button>
+        <button class="btn-action btn-delete" data-id="${
+          app._id
+        }">Delete</button>
+    </td>
+    `;
       recentApplicationsBody.appendChild(row);
     });
 
@@ -591,22 +595,21 @@ class ApplicationManager {
     this.applications.forEach((app) => {
       const row = document.createElement("tr");
       row.innerHTML = `
-                <td>${app.jobTitle}</td>
-                <td>${app.company}</td>
-                <td>${this.formatDate(app.date)}</td>
-                <td><span class="status-badge status-${
-                  app.status
-                }">${this.getStatusText(app.status)}</span></td>
-                <td>${app.notes || ""}</td>
-                <td class="action-buttons">
-                    <button class="btn-action btn-edit" data-id="${
-                      app._id
-                    }">Edit</button>
-                    <button class="btn-action btn-delete" data-id="${
-                      app._id
-                    }">Delete</button>
-                </td>
-            `;
+    <td>${app.jobTitle}</td>
+    <td>${app.company}</td>
+    <td>${app.location || "-"}</td>
+    <td>${this.formatDate(app.date)}</td>
+    <td><span class="status-badge status-${app.status}">${this.getStatusText(
+        app.status
+      )}</span></td>
+    <td>${app.notes || ""}</td>
+    <td class="action-buttons">
+        <button class="btn-action btn-edit" data-id="${app._id}">Edit</button>
+        <button class="btn-action btn-delete" data-id="${
+          app._id
+        }">Delete</button>
+    </td>
+   `;
       allApplicationsBody.appendChild(row);
     });
 
@@ -774,34 +777,35 @@ class ApplicationManager {
     }
 
     resultsContainer.innerHTML = `
-            <div class="filtered-header">
-                <h4>${new Date(year, month - 1).toLocaleDateString("en-US", {
-                  month: "long",
-                  year: "numeric",
-                })}</h4>
-                <span class="stat-count">${
-                  filteredApplications.length
-                } applications</span>
+    <div class="filtered-header">
+        <h4>${new Date(year, month - 1).toLocaleDateString("en-US", {
+          month: "long",
+          year: "numeric",
+        })}</h4>
+        <span class="stat-count">${
+          filteredApplications.length
+        } applications</span>
+    </div>
+    <div class="applications-list">
+        ${filteredApplications
+          .map(
+            (app) => `
+            <div class="application-item">
+                <span class="app-title">${app.jobTitle}</span>
+                <span class="app-company">at ${app.company}</span>
+                <span class="app-location">${
+                  app.location ? `in ${app.location}` : ""
+                }</span>
+                <span class="app-date">${this.formatDate(app.date)}</span>
+                <span class="app-status status-${
+                  app.status
+                }">${this.getStatusText(app.status)}</span>
             </div>
-            <div class="applications-list">
-                ${filteredApplications
-                  .map(
-                    (app) => `
-                    <div class="application-item">
-                        <span class="app-title">${app.jobTitle}</span>
-                        <span class="app-company">at ${app.company}</span>
-                        <span class="app-date">${this.formatDate(
-                          app.date
-                        )}</span>
-                        <span class="app-status status-${
-                          app.status
-                        }">${this.getStatusText(app.status)}</span>
-                    </div>
-                `
-                  )
-                  .join("")}
-            </div>
-        `;
+        `
+          )
+          .join("")}
+    </div>
+  `;
   }
 
   // Helper functions

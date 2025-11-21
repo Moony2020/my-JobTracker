@@ -47,18 +47,33 @@ router.post(
         });
       }
 
-      const { jobTitle, company, date, status, notes } = req.body;
+      const { jobTitle, company, location, date, status, notes } = req.body;
 
-      const application = new Application({
-        user: req.user.id,
+      console.log("Received application data:", {
+        // Debug log
         jobTitle,
         company,
+        location,
         date,
         status,
         notes,
       });
 
+      const application = new Application({
+        user: req.user.id,
+        jobTitle,
+        company,
+        location, // This should save the location
+        date,
+        status,
+        notes,
+      });
+
+      console.log("Application to be saved:", application); // Debug log
+
       await application.save();
+
+      console.log("Application saved successfully:", application); // Debug log
 
       res.status(201).json(application);
     } catch (error) {
@@ -70,7 +85,7 @@ router.post(
   }
 );
 
-// Update application - FIXED ROUTE
+// Update application
 router.put(
   "/:id",
   [
@@ -92,7 +107,7 @@ router.put(
         });
       }
 
-      const { jobTitle, company, date, status, notes } = req.body;
+      const { jobTitle, company, location, date, status, notes } = req.body;
 
       // Use findByIdAndUpdate for better error handling
       const application = await Application.findOneAndUpdate(
@@ -103,6 +118,7 @@ router.put(
         {
           jobTitle,
           company,
+          location,
           date,
           status,
           notes,

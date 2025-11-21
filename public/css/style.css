@@ -18,6 +18,7 @@
     --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.15);
     --glass-bg: rgba(255, 255, 255, 0.25);
     --glass-border: rgba(255, 255, 255, 0.18);
+    --light-border: rgba(137, 138, 138, 0.274);
 }
 
 .dark-mode {
@@ -30,7 +31,7 @@
     --shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
     --shadow-lg: 0 20px 40px rgba(0, 0, 0, 0.4);
     --glass-bg: rgba(30, 41, 59, 0.6);
-    --glass-border: rgba(255, 255, 255, 0.1);
+    --glass-border: rgba(137, 138, 138, 0.274);
 }
 
 * {
@@ -233,7 +234,7 @@ header {
     color: #ffffff;
     box-shadow: 0 10px 25px rgba(99, 102, 241, 0.35);
     transform: translateY(-2px);
-    border-color: rgba(255, 255, 255, 0.2);
+    border-color: var(--light-border);
 }
 
 .desktop-nav ul li a::before {
@@ -439,7 +440,7 @@ header {
     gap: .8rem;
     margin-top: 2rem;
     padding-top: 2rem;
-    border-top: 1px solid var(--glass-border);
+    border-top: 1px solid var(--light-border);
     align-items: center;
 }
 
@@ -589,6 +590,9 @@ main {
     background: var(--glass-bg);
     border-radius: 12px;
     border-left: 4px solid var(--primary-color);
+    border-right: 1px solid var(--light-border);
+    border-bottom: 1px solid var(--light-border);
+    border-top: 1px solid var(--light-border);
 }
 
 .section-description p {
@@ -606,7 +610,7 @@ main {
 
 .stat-item {
     background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--light-border);
     border-radius: 16px;
     padding: 1.5rem;
     transition: all 0.3s ease;
@@ -624,7 +628,7 @@ main {
     align-items: center;
     margin-bottom: 1rem;
     padding-bottom: 0.75rem;
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--light-border);
 }
 
 .stat-header h4 {
@@ -658,6 +662,9 @@ main {
     background: rgba(255, 255, 255, 0.05);
     border-radius: 12px;
     border-left: 4px solid var(--primary-color);
+    border-right: 1px solid var(--light-border);
+    border-bottom: 1px solid var(--light-border);
+    border-top: 1px solid var(--light-border);
     transition: all 0.3s ease;
 }
 
@@ -676,6 +683,13 @@ main {
 .app-company {
     color: var(--text-muted);
     font-size: 0.85rem;
+    min-width: 120px;
+}
+
+.app-location {
+    color: var(--text-muted);
+    font-size: 0.8rem;
+    font-style: italic;
     min-width: 120px;
 }
 
@@ -712,7 +726,7 @@ main {
 /* Filtered Results */
 .filtered-results {
     background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--light-border);
     border-radius: 16px;
     padding: 1.5rem;
     margin-top: 1rem;
@@ -743,7 +757,7 @@ main {
 
 .chart-section {
     background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--light-border);
     border-radius: 16px;
     padding: 1.5rem;
 }
@@ -771,6 +785,9 @@ main {
     background: var(--glass-bg);
     border-radius: 12px;
     border-left: 4px solid var(--primary-color);
+    border-right: 1px solid var(--light-border);
+    border-bottom: 1px solid var(--light-border);
+    border-top: 1px solid var(--light-border);
 }
 
 .performance-label {
@@ -806,7 +823,7 @@ main {
     padding: 3rem 2rem;
     background: var(--glass-bg);
     border-radius: 12px;
-    border: 2px dashed var(--glass-border);
+    border: 2px dashed var(--light-border);
 }
 
 .loading-message {
@@ -863,11 +880,11 @@ main {
 .form-grid {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .form-group {
-    margin-bottom: 1.5rem;
+    margin-bottom: .7rem;
 }
 
 .form-group label {
@@ -879,12 +896,12 @@ main {
 
 .form-control {
     width: 100%;
-    padding: 1rem 1.25rem;
-    border: 2px solid var(--glass-border);
+    padding: 0.75rem 1rem;
+    border: 2px solid var(--light-border);
     border-radius: 12px;
     background: var(--card-bg);
     color: var(--text-color);
-    font-size: 1rem;
+    font-size: 0.9rem;
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
 }
@@ -930,7 +947,7 @@ main {
 .applications-table td {
     padding: 1.25rem 1.5rem;
     text-align: left;
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--light-border);
 }
 
 .applications-table th {
@@ -1052,10 +1069,14 @@ main {
     background: var(--card-bg);
     backdrop-filter: blur(30px);
     border: 1px solid var(--card-border);
-    border-radius: 24px;
+    border-radius: 20px;
     padding: 1.5rem;
     width: 100%;
-    max-width: 450px;
+    max-width: 420px;
+    max-height: 85vh;
+    /* Limit height */
+    overflow-y: auto;
+    /* Enable scrolling */
     box-shadow: var(--shadow-lg);
     animation: modalSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 }
@@ -1078,7 +1099,7 @@ main {
     align-items: center;
     margin-bottom: 1.2rem;
     padding-bottom: .8rem;
-    border-bottom: 1px solid var(--glass-border);
+    border-bottom: 1px solid var(--light-border);
 }
 
 .modal-header h2 {
@@ -1089,7 +1110,7 @@ main {
 
 .close-modal {
     background: var(--glass-bg);
-    border: 1px solid var(--glass-border);
+    border: 1px solid var(--light-border);
     font-size: 1.5rem;
     cursor: pointer;
     color: var(--text-muted);
@@ -1107,6 +1128,83 @@ main {
     background: rgba(239, 68, 68, 0.1);
 }
 
+.modal .form-grid {
+    gap: .3rem;
+}
+
+#deleteModal .form-actions {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-start;
+    margin-top: .6rem;
+    padding-top: .9rem;
+    border-top: 1px solid var(--light-border);
+}
+
+#deleteModal .btn {
+    padding: 0.5rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    min-width: 100px;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+#deleteModal .btn-outline {
+    background: transparent;
+    border-color: var(--text-muted);
+    color: var(--text-color);
+}
+
+#deleteModal .btn-outline:hover {
+    background: var(--text-muted);
+    color: white;
+    transform: translateY(-2px);
+}
+
+#deleteModal .btn-danger {
+    background: linear-gradient(135deg, #ef4444, #f87171);
+    color: white;
+    border: none;
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+}
+
+#deleteModal .btn-danger:hover {
+    background: linear-gradient(135deg, #dc2626, #ef4444);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(239, 68, 68, 0.4);
+}
+
+/* cancel button */
+#editModal .form-actions {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-start;
+    margin-top: .4rem;
+    border-top: 1px solid var(--glass-border);
+}
+
+#editModal .btn-outline {
+    background: transparent;
+    border: 2px solid var(--primary-color);
+    color: var(--primary-color);
+    padding: 0.7rem 1rem;
+    border-radius: 10px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    min-width: 100px;
+    transition: all 0.3s ease;
+    cursor: pointer;
+}
+
+#editModal .btn-outline:hover {
+    background: var(--primary-color);
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(99, 102, 241, 0.3);
+}
+
 /* Modern Notifications */
 .notification {
     position: fixed;
@@ -1118,7 +1216,7 @@ main {
     z-index: 1001;
     box-shadow: var(--shadow-lg);
     backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    border: 1px solid var(--light-border);
     max-width: 400px;
     animation: notificationSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     display: flex;
@@ -1291,14 +1389,38 @@ footer {
         overflow-x: auto;
     }
 
-    .modal-content {
+    /* .modal-content {
         padding: 1.5rem;
         margin: 1rem;
+    } */
+    .modal-content {
+        margin: 0.5rem;
+        max-height: 95vh;
+        padding: 1.25rem;
     }
 
-    .form-actions {
+    #editModal .form-grid {
+        grid-template-columns: 1fr;
+        gap: 0.65rem;
+    }
+
+    .modal .form-actions {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+
+    .modal .form-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+
+    #deleteModal .form-actions {
         flex-direction: column;
     }
+
+    /* .form-actions {
+        flex-direction: column;
+    } */
 
     .btn {
         width: 100%;
@@ -1371,5 +1493,23 @@ footer {
 
     .header-right {
         gap: 0.4rem;
+    }
+
+    .form-actions {
+        flex-direction: column;
+    }
+
+    .modal-content {
+        padding: 1rem;
+        margin: 0.25rem;
+    }
+
+    .modal-header {
+        padding-bottom: 0.75rem;
+        margin-bottom: 0.75rem;
+    }
+
+    .modal-header h2 {
+        font-size: 1.3rem;
     }
 }

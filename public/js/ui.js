@@ -170,6 +170,7 @@ class UIManager {
     document.getElementById("edit-application-id").value = application._id;
     document.getElementById("edit-job-title").value = application.jobTitle;
     document.getElementById("edit-company").value = application.company;
+    document.getElementById("edit-location").value = application.location || "";
     document.getElementById("edit-application-date").value =
       application.date.split("T")[0];
     document.getElementById("edit-status").value = application.status;

@@ -19,6 +19,11 @@ const ApplicationSchema = new mongoose.Schema(
       trim: true,
       maxlength: [100, "Company name cannot be more than 100 characters"],
     },
+    location: {
+      type: String,
+      trim: true,
+      maxlength: [100, "Location cannot be more than 100 characters"],
+    },
     date: {
       type: Date,
       required: [true, "Application date is required"],
