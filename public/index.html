@@ -260,36 +260,144 @@
         <!-- Statistics Page -->
         <div id="statistics-page" class="page hidden">
           <h1>Application Statistics</h1>
+
+          <!-- Main Statistics Cards -->
           <div class="stats-cards">
             <div class="stat-card">
               <h3 id="stats-total">0</h3>
               <p>Total Applications</p>
+              <!-- Shows the complete count of all job applications you've submitted -->
             </div>
             <div class="stat-card">
               <h3 id="stats-this-month">0</h3>
               <p>This Month</p>
+              <!-- Count of applications submitted in the current month -->
             </div>
             <div class="stat-card">
               <h3 id="stats-interview-rate">0%</h3>
               <p>Interview Rate</p>
+              <!-- Percentage of applications that led to interview invitations -->
             </div>
             <div class="stat-card">
               <h3 id="stats-offer-rate">0%</h3>
               <p>Offer Rate</p>
+              <!-- Percentage of applications that resulted in job offers -->
             </div>
           </div>
 
-          <div class="chart-section">
+          <!-- Weekly Applications Section -->
+          <div class="statistics-section">
             <h2>Applications by Week</h2>
-            <div id="weekly-chart">
-              <canvas id="weeklyChart"></canvas>
+            <div class="section-description">
+              <p>
+                Track your application activity across different weeks. Each
+                week shows the number of applications submitted and detailed job
+                information.
+              </p>
+            </div>
+            <div class="stats-container" id="weekly-stats-container">
+              <!-- Dynamic content: Will be populated with weekly statistics -->
+              <!-- Each week shows: Week number, year, application count, and job details -->
+              <div class="loading-message">Loading weekly statistics...</div>
             </div>
           </div>
 
-          <div class="chart-section">
-            <h2>Applications by Status</h2>
-            <div id="status-chart">
-              <canvas id="statusChart"></canvas>
+          <!-- Monthly Applications Section -->
+          <div class="statistics-section">
+            <h2>Applications by Month</h2>
+            <div class="section-description">
+              <p>
+                Monthly overview of your job search activity. See which months
+                were most productive and review all applications from specific
+                periods.
+              </p>
+            </div>
+            <div class="stats-container" id="monthly-stats-container">
+              <!-- Dynamic content: Will be populated with monthly statistics -->
+              <!-- Each month shows: Month name, year, application count, and job details -->
+              <div class="loading-message">Loading monthly statistics...</div>
+            </div>
+          </div>
+
+          <!-- Month Filter Section -->
+          <div class="statistics-section">
+            <h2>Filter Applications by Specific Month</h2>
+            <div class="section-description">
+              <p>
+                Select a specific month to view detailed information about all
+                applications submitted during that period.
+              </p>
+            </div>
+
+            <!-- Month Selection Controls -->
+            <div class="filter-controls">
+              <div class="form-group">
+                <label for="month-filter">Select Month</label>
+                <select id="month-filter" class="form-control">
+                  <option value="all">All Months</option>
+                  <!-- Dynamic options: Will be populated with available months from your applications -->
+                </select>
+              </div>
+              <button id="apply-month-filter" class="btn btn-primary">
+                Show Applications
+              </button>
+              <!-- Button to apply the month filter and display results -->
+            </div>
+
+            <!-- Filter Results Display -->
+            <div class="filtered-results" id="monthly-filter-results">
+              <!-- Dynamic content: Will show applications from selected month -->
+              <div class="initial-message">
+                Select a month and click "Show Applications" to view specific
+                results.
+              </div>
+            </div>
+          </div>
+
+          <!-- Charts Section (Optional - for visual data representation) -->
+          <div class="statistics-section">
+            <h2>Visual Analytics</h2>
+            <div class="charts-container">
+              <div class="chart-section">
+                <h3>Applications Timeline</h3>
+                <div id="weekly-chart">
+                  <canvas id="weeklyChart"></canvas>
+                  <!-- Chart showing application trends over weeks -->
+                </div>
+              </div>
+              <div class="chart-section">
+                <h3>Status Distribution</h3>
+                <div id="status-chart">
+                  <canvas id="statusChart"></canvas>
+                  <!-- Pie chart showing distribution of application statuses -->
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Stats Summary -->
+          <div class="statistics-section">
+            <h2>Performance Summary</h2>
+            <div class="performance-stats">
+              <div class="performance-item">
+                <span class="performance-label"
+                  >Current Week Applications:</span
+                >
+                <span class="performance-value" id="current-week-count">0</span>
+                <!-- Shows applications submitted in the current week (Sunday to Saturday) -->
+              </div>
+              <div class="performance-item">
+                <span class="performance-label">Most Active Month:</span>
+                <span class="performance-value" id="most-active-month">-</span>
+                <!-- Displays the month with highest number of applications -->
+              </div>
+              <div class="performance-item">
+                <span class="performance-label"
+                  >Average Weekly Applications:</span
+                >
+                <span class="performance-value" id="weekly-average">0</span>
+                <!-- Calculated average of applications per week -->
+              </div>
             </div>
           </div>
         </div>
@@ -382,7 +490,7 @@
 
     <footer>
       <div class="container">
-        <p>&copy; 2023 JobTracker. All rights reserved.</p>
+        <p>&copy; 2025 JobTracker. All rights reserved.</p>
       </div>
     </footer>
     <!-- Edit Application Modal -->

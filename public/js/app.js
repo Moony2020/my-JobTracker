@@ -8,6 +8,9 @@ class ApplicationManager {
 
     this.initEventListeners();
     this.loadApplications();
+
+    // Setup filtering system
+    this.setupFiltering();
   }
 
   initEventListeners() {
@@ -271,21 +274,14 @@ class ApplicationManager {
   updateUI() {
     this.updateDashboard();
     this.updateApplicationsTable();
-    this.updateStatistics();        
+    this.updateStatisticsPage();
   }
 
   updateDashboard() {
     const totalApplications = this.applications.length;
 
     // Calculate this week's applications
-    const thisWeekApplications = this.applications.filter((app) => {
-      const appDate = new Date(app.date);
-      const today = new Date();
-      const startOfWeek = new Date(today);
-      startOfWeek.setDate(today.getDate() - today.getDay());
-      startOfWeek.setHours(0, 0, 0, 0);
-      return appDate >= startOfWeek;
-    }).length;
+    const thisWeekApplications = this.getThisWeekApplications();
 
     const interviews = this.applications.filter(
       (app) => app.status === "interview"
@@ -296,19 +292,241 @@ class ApplicationManager {
     const successRate =
       totalApplications > 0 ? (offers / totalApplications) * 100 : 0;
 
-    // Update DOM elements if they exist
-    const totalEl = document.getElementById("total-applications");
-    const weekEl = document.getElementById("this-week");
-    const interviewsEl = document.getElementById("interviews");
-    const successEl = document.getElementById("success-rate");
+    document.getElementById("total-applications").textContent =
+      totalApplications;
+    document.getElementById("this-week").textContent = thisWeekApplications;
+    document.getElementById("interviews").textContent = interviews;
+    document.getElementById("success-rate").textContent =
+      successRate.toFixed(1) + "%";
 
-    if (totalEl) totalEl.textContent = totalApplications;
-    if (weekEl) weekEl.textContent = thisWeekApplications;
-    if (interviewsEl) interviewsEl.textContent = interviews;
-    if (successEl) successEl.textContent = successRate.toFixed(1) + "%";
+    // Update extended statistics
+    this.updateExtendedStatistics();
 
-    // Update recent applications table
+    // Update recent applications
     this.updateRecentApplications();
+  }
+
+  // Get this week's applications
+  getThisWeekApplications() {
+    const today = new Date();
+    const startOfWeek = new Date(today);
+    startOfWeek.setDate(today.getDate() - today.getDay());
+    startOfWeek.setHours(0, 0, 0, 0);
+
+    const endOfWeek = new Date(startOfWeek);
+    endOfWeek.setDate(startOfWeek.getDate() + 6);
+    endOfWeek.setHours(23, 59, 59, 999);
+
+    return this.applications.filter((app) => {
+      const appDate = new Date(app.date);
+      return appDate >= startOfWeek && appDate <= endOfWeek;
+    }).length;
+  }
+
+  // Extended Statistics by Week and Month
+  updateExtendedStatistics() {
+    const weeklyStats = this.getWeeklyStatistics();
+    const monthlyStats = this.getMonthlyStatistics();
+
+    this.displayWeeklyStats(weeklyStats);
+    this.displayMonthlyStats(monthlyStats);
+    this.updatePerformanceStats(weeklyStats, monthlyStats);
+  }
+  // Update performance summary statistics
+  updatePerformanceStats(weeklyStats, monthlyStats) {
+    // Current week count
+    const currentWeekCount = this.getThisWeekApplications();
+    document.getElementById("current-week-count").textContent =
+      currentWeekCount;
+
+    // Most active month
+    const mostActiveMonth = this.getMostActiveMonth(monthlyStats);
+    document.getElementById("most-active-month").textContent = mostActiveMonth;
+
+    // Weekly average
+    const weeklyAverage = this.getWeeklyAverage(weeklyStats);
+    document.getElementById("weekly-average").textContent = weeklyAverage;
+  }
+
+  // Get most active month
+  getMostActiveMonth(monthlyStats) {
+    if (Object.keys(monthlyStats).length === 0) return "-";
+
+    const months = Object.values(monthlyStats);
+    const mostActive = months.reduce(
+      (max, month) => (month.count > max.count ? month : max),
+      months[0]
+    );
+
+    return mostActive.monthName;
+  }
+
+  // Calculate weekly average
+  getWeeklyAverage(weeklyStats) {
+    if (Object.keys(weeklyStats).length === 0) return "0";
+
+    const weeks = Object.values(weeklyStats);
+    const totalApplications = weeks.reduce((sum, week) => sum + week.count, 0);
+    const average = totalApplications / weeks.length;
+
+    return average.toFixed(1);
+  }
+  // Weekly statistics
+  getWeeklyStatistics() {
+    const weeklyStats = {};
+
+    this.applications.forEach((app) => {
+      const weekNumber = this.getWeekNumber(new Date(app.date));
+      const year = new Date(app.date).getFullYear();
+      const weekKey = `${year}-W${weekNumber.toString().padStart(2, "0")}`;
+
+      if (!weeklyStats[weekKey]) {
+        weeklyStats[weekKey] = {
+          week: weekNumber,
+          year: year,
+          count: 0,
+          applications: [],
+        };
+      }
+
+      weeklyStats[weekKey].count++;
+      weeklyStats[weekKey].applications.push(app);
+    });
+
+    return weeklyStats;
+  }
+
+  // Monthly statistics
+  getMonthlyStatistics() {
+    const monthlyStats = {};
+
+    this.applications.forEach((app) => {
+      const date = new Date(app.date);
+      const month = date.getMonth() + 1;
+      const year = date.getFullYear();
+      const monthKey = `${year}-${month.toString().padStart(2, "0")}`;
+      const monthName = date.toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric",
+      });
+
+      if (!monthlyStats[monthKey]) {
+        monthlyStats[monthKey] = {
+          month: month,
+          year: year,
+          monthName: monthName,
+          count: 0,
+          applications: [],
+        };
+      }
+
+      monthlyStats[monthKey].count++;
+      monthlyStats[monthKey].applications.push(app);
+    });
+
+    return monthlyStats;
+  }
+
+  // Display weekly statistics
+  displayWeeklyStats(weeklyStats) {
+    const weeklyContainer = document.getElementById("weekly-stats-container");
+    if (!weeklyContainer) return;
+
+    weeklyContainer.innerHTML = "";
+
+    // Convert the object to an array and sort it in descending order
+    const sortedWeeks = Object.values(weeklyStats).sort((a, b) => {
+      if (a.year !== b.year) return b.year - a.year;
+      return b.week - a.week;
+    });
+
+    if (sortedWeeks.length === 0) {
+      weeklyContainer.innerHTML = '<p class="no-data">No applications yet</p>';
+      return;
+    }
+
+    sortedWeeks.forEach((week) => {
+      const weekElement = document.createElement("div");
+      weekElement.className = "stat-item";
+      weekElement.innerHTML = `
+                <div class="stat-header">
+                    <h4>Week ${week.week}, ${week.year}</h4>
+                    <span class="stat-count">${week.count} applications</span>
+                </div>
+                <div class="applications-list">
+                    ${week.applications
+                      .map(
+                        (app) => `
+                        <div class="application-item">
+                            <span class="app-title">${app.jobTitle}</span>
+                            <span class="app-company">at ${app.company}</span>
+                            <span class="app-status status-${
+                              app.status
+                            }">${this.getStatusText(app.status)}</span>
+                        </div>
+                    `
+                      )
+                      .join("")}
+                </div>
+            `;
+      weeklyContainer.appendChild(weekElement);
+    });
+  }
+
+  // Display monthly statistics
+  displayMonthlyStats(monthlyStats) {
+    const monthlyContainer = document.getElementById("monthly-stats-container");
+    if (!monthlyContainer) return;
+
+    monthlyContainer.innerHTML = "";
+
+    // Convert the object to an array and sort it in descending order
+    const sortedMonths = Object.values(monthlyStats).sort((a, b) => {
+      if (a.year !== b.year) return b.year - a.year;
+      return b.month - a.month;
+    });
+
+    if (sortedMonths.length === 0) {
+      monthlyContainer.innerHTML = '<p class="no-data">No applications yet</p>';
+      return;
+    }
+
+    sortedMonths.forEach((month) => {
+      const monthElement = document.createElement("div");
+      monthElement.className = "stat-item";
+      monthElement.innerHTML = `
+                <div class="stat-header">
+                    <h4>${month.monthName}</h4>
+                    <span class="stat-count">${month.count} applications</span>
+                </div>
+                <div class="applications-list">
+                    ${month.applications
+                      .map(
+                        (app) => `
+                        <div class="application-item">
+                            <span class="app-title">${app.jobTitle}</span>
+                            <span class="app-company">at ${app.company}</span>
+                            <span class="app-date">${this.formatDate(
+                              app.date
+                            )}</span>
+                            <span class="app-status status-${
+                              app.status
+                            }">${this.getStatusText(app.status)}</span>
+                        </div>
+                    `
+                      )
+                      .join("")}
+                </div>
+            `;
+      monthlyContainer.appendChild(monthElement);
+    });
+  }
+
+  // Helper function to get the week number
+  getWeekNumber(date) {
+    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
+    const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
+    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
   }
 
   updateRecentApplications() {
@@ -413,7 +631,8 @@ class ApplicationManager {
     });
   }
 
-  updateStatistics() {
+  // Update statistics page (separate from dashboard)
+  updateStatisticsPage() {
     const totalApplications = this.applications.length;
 
     // This month applications
@@ -452,12 +671,137 @@ class ApplicationManager {
       interviewRateEl.textContent = interviewRate.toFixed(1) + "%";
     if (offerRateEl) offerRateEl.textContent = offerRate.toFixed(1) + "%";
 
+    // Update extended statistics for statistics page
+    this.updateExtendedStatistics();
+
     this.updateCharts();
   }
 
   updateCharts() {
     // Simple chart implementation - in a real app, use Chart.js or similar
     console.log("Charts would be updated here with real data");
+  }
+
+  // Month Filtering System
+  setupFiltering() {
+    const monthFilter = document.getElementById("month-filter");
+    const applyFilterBtn = document.getElementById("apply-month-filter");
+
+    if (monthFilter && applyFilterBtn) {
+      this.populateMonthFilter();
+
+      applyFilterBtn.addEventListener("click", () => {
+        this.applyMonthFilter();
+      });
+    }
+  }
+
+  // Populate available months in filter dropdown
+  populateMonthFilter() {
+    const monthFilter = document.getElementById("month-filter");
+    if (!monthFilter) return;
+
+    // Clear current options (except "All Months")
+    while (monthFilter.children.length > 1) {
+      monthFilter.removeChild(monthFilter.lastChild);
+    }
+
+    // Collect available months from applications
+    const availableMonths = new Set();
+
+    this.applications.forEach((app) => {
+      const date = new Date(app.date);
+      const month = date.getMonth();
+      const year = date.getFullYear();
+      const monthKey = `${year}-${(month + 1).toString().padStart(2, "0")}`;
+      const monthName = date.toLocaleDateString("en-US", {
+        month: "long",
+        year: "numeric",
+      });
+
+      availableMonths.add(
+        JSON.stringify({
+          key: monthKey,
+          name: monthName,
+          year: year,
+          month: month + 1,
+        })
+      );
+    });
+
+    // Convert to array and sort in descending order
+    const sortedMonths = Array.from(availableMonths)
+      .map((item) => JSON.parse(item))
+      .sort((a, b) => {
+        if (a.year !== b.year) return b.year - a.year;
+        return b.month - a.month;
+      });
+
+    // Add options to dropdown
+    sortedMonths.forEach((month) => {
+      const option = document.createElement("option");
+      option.value = month.key;
+      option.textContent = month.name;
+      monthFilter.appendChild(option);
+    });
+  }
+
+  // Apply month filter and display results
+  applyMonthFilter() {
+    const monthFilter = document.getElementById("month-filter");
+    const resultsContainer = document.getElementById("monthly-filter-results");
+
+    if (!monthFilter || !resultsContainer) return;
+
+    const selectedMonth = monthFilter.value;
+
+    if (selectedMonth === "all") {
+      resultsContainer.innerHTML =
+        '<p class="no-data">Select a specific month to see applications</p>';
+      return;
+    }
+
+    const [year, month] = selectedMonth.split("-").map(Number);
+    const filteredApplications = this.applications.filter((app) => {
+      const appDate = new Date(app.date);
+      return appDate.getFullYear() === year && appDate.getMonth() + 1 === month;
+    });
+
+    if (filteredApplications.length === 0) {
+      resultsContainer.innerHTML =
+        '<p class="no-data">No applications found for the selected month</p>';
+      return;
+    }
+
+    resultsContainer.innerHTML = `
+            <div class="filtered-header">
+                <h4>${new Date(year, month - 1).toLocaleDateString("en-US", {
+                  month: "long",
+                  year: "numeric",
+                })}</h4>
+                <span class="stat-count">${
+                  filteredApplications.length
+                } applications</span>
+            </div>
+            <div class="applications-list">
+                ${filteredApplications
+                  .map(
+                    (app) => `
+                    <div class="application-item">
+                        <span class="app-title">${app.jobTitle}</span>
+                        <span class="app-company">at ${app.company}</span>
+                        <span class="app-date">${this.formatDate(
+                          app.date
+                        )}</span>
+                        <span class="app-status status-${
+                          app.status
+                        }">${this.getStatusText(app.status)}</span>
+                    </div>
+                `
+                  )
+                  .join("")}
+            </div>
+        `;
   }
 
   // Helper functions
