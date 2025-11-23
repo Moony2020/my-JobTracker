@@ -258,7 +258,6 @@
                 <th>Location</th>
                 <th>Date</th>
                 <th>Status</th>
-                <th>Notes</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -344,10 +343,14 @@
             <div class="filter-controls">
               <div class="form-group">
                 <label for="month-filter">Select Month</label>
-                <select id="month-filter" class="form-control">
-                  <option value="all">All Months</option>
-                  <!-- Dynamic options: Will be populated with available months from your applications -->
-                </select>
+
+                <div class="select-wrapper">
+                  <select id="month-filter" class="form-control">
+                    <option value="all">All Months</option>
+                    <!-- Dynamic options: filled from JS -->
+                  </select>
+                   <i class="ri-arrow-down-s-fill chevron" aria-hidden="true"></i>
+                </div>
               </div>
               <button id="apply-month-filter" class="btn btn-primary">
                 Show Applications

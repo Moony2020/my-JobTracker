@@ -576,7 +576,6 @@ class ApplicationManager {
 
     this.attachActionListeners();
   }
-
   updateApplicationsTable() {
     const allApplicationsBody = document.getElementById(
       "all-applications-body"
@@ -587,7 +586,7 @@ class ApplicationManager {
 
     if (this.applications.length === 0) {
       const row = document.createElement("tr");
-      row.innerHTML = `<td colspan="6" style="text-align: center; padding: 20px;">No applications found. Add your first application from the Dashboard!</td>`;
+      row.innerHTML = `<td colspan="5" style="text-align: center; padding: 20px;">No applications found. Add your first application from the Dashboard!</td>`;
       allApplicationsBody.appendChild(row);
       return;
     }
@@ -595,21 +594,20 @@ class ApplicationManager {
     this.applications.forEach((app) => {
       const row = document.createElement("tr");
       row.innerHTML = `
-    <td>${app.jobTitle}</td>
-    <td>${app.company}</td>
-    <td>${app.location || "-"}</td>
-    <td>${this.formatDate(app.date)}</td>
-    <td><span class="status-badge status-${app.status}">${this.getStatusText(
+      <td>${app.jobTitle}</td>
+      <td>${app.company}</td>
+      <td>${app.location || "-"}</td>
+      <td>${this.formatDate(app.date)}</td>
+      <td><span class="status-badge status-${app.status}">${this.getStatusText(
         app.status
       )}</span></td>
-    <td>${app.notes || ""}</td>
-    <td class="action-buttons">
-        <button class="btn-action btn-edit" data-id="${app._id}">Edit</button>
-        <button class="btn-action btn-delete" data-id="${
-          app._id
-        }">Delete</button>
-    </td>
-   `;
+      <td class="action-buttons">
+          <button class="btn-action btn-edit" data-id="${app._id}">Edit</button>
+          <button class="btn-action btn-delete" data-id="${
+            app._id
+          }">Delete</button>
+      </td>
+    `;
       allApplicationsBody.appendChild(row);
     });
 

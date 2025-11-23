@@ -218,6 +218,11 @@ class UIManager {
       }
     });
 
+    // 🔹 Always close the mobile nav when changing page
+    if (typeof this.closeMobileNav === "function") {
+      this.closeMobileNav();
+    }
+
     // Update statistics if needed
     if (pageId === "statistics" && window.applicationManager) {
       window.applicationManager.updateStatistics();
