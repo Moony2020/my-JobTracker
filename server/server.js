@@ -38,6 +38,6 @@ app.get("*", (req, res) => {
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
-  console.log(`Frontend: https://jobtracker-pbjx.onrender.com`);
-  console.log(`API: https://jobtracker-pbjx.onrender.com/api`);
+  console.log(`Frontend: https://jobtracker-ptwj.onrender.com`);
+  console.log(`API: https://jobtracker-ptwj.onrender.com/api`);
 });
