@@ -862,11 +862,24 @@ main {
     max-width: 100%;
 }
 
+/* Chart container styling - FIXED */
+#weekly-chart,
+#status-chart {
+    position: relative;
+    height: 250px;
+    width: 100%;
+    min-height: 250px;
+    /* Ensure minimum height */
+}
+
 .chart-section {
-    background: var(--glass-bg);
+    min-height: 320px;
+    display: flex;
+    flex-direction: column;
+    background: var(--card-bg);
+    border-radius: 12px;
+    padding: .6rem;
     border: 1px solid var(--light-border);
-    border-radius: 16px;
-    padding: 1.5rem;
 }
 
 .chart-section h3 {
@@ -874,6 +887,19 @@ main {
     color: var(--text-color);
     font-weight: 600;
     text-align: center;
+    flex-shrink: 0;
+}
+
+/* Ensure chart canvas takes full container */
+#weeklyChart,
+#statusChart {
+    width: 100% !important;
+    height: 100% !important;
+}
+
+#weeklyChart,
+#statusChart {
+    background: transparent !important;
 }
 
 /* Performance Stats */
@@ -1750,6 +1776,10 @@ footer {
         align-items: flex-start;
         gap: 0.5rem;
     }
+
+    .charts-container {
+        grid-template-columns: 1fr;
+    }
 }
 
 @media (max-width: 480px) {
@@ -1790,7 +1820,7 @@ footer {
         gap: 0.3rem;
     }
 
-    /* Fix specific status badge centering */
+    /* specific status badge centering */
     .status-applied,
     .status-interview,
     .status-test,

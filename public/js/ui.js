@@ -115,6 +115,13 @@ class UIManager {
     const isDarkMode = document.body.classList.contains("dark-mode");
     localStorage.setItem("darkMode", isDarkMode);
     this.themeToggle.textContent = isDarkMode ? "☀️" : "🌙";
+
+    // Refresh charts when theme changes
+    setTimeout(() => {
+      if (window.applicationManager) {
+        window.applicationManager.updateCharts();
+      }
+    }, 300);
   }
 
   // Mobile Navigation Methods
@@ -225,7 +232,7 @@ class UIManager {
 
     // Update statistics if needed
     if (pageId === "statistics" && window.applicationManager) {
-      window.applicationManager.updateStatistics();
+      window.applicationManager.updateStatisticsPage();
     }
   }
 

@@ -6,6 +6,10 @@ class ApplicationManager {
     this.editApplicationForm = document.getElementById("edit-application-form");
     this.statusFilter = document.getElementById("status-filter");
 
+    // Add chart instances
+    this.statusChartInstance = null;
+    this.timelineChartInstance = null;
+
     this.initEventListeners();
     this.loadApplications();
 
@@ -675,14 +679,261 @@ class ApplicationManager {
     // Update extended statistics for statistics page
     this.updateExtendedStatistics();
 
+    // Update charts
     this.updateCharts();
   }
 
   updateCharts() {
-    // Simple chart implementation - in a real app, use Chart.js or similar
-    console.log("Charts would be updated here with real data");
+    this.updateStatusChart();
+    this.updateTimelineChart();
+  }
+  // Update status chart
+  updateStatusChart() {
+    const ctx = document.getElementById("statusChart");
+    if (!ctx) return;
+
+    // More reliable theme detection
+    const isDarkMode = document.body.classList.contains("dark-mode");
+    console.log("Status Chart - Dark mode detected:", isDarkMode);
+
+    // Use direct color values for better reliability
+    const textColor = isDarkMode ? "#f1f5f9" : "#1e293b";
+    const cardBg = isDarkMode ? "#1e293b" : "#ffffff";
+    const lightBorder = isDarkMode
+      ? "rgba(255, 255, 255, 0.2)"
+      : "rgba(0, 0, 0, 0.1)";
+
+    console.log("Status Chart - Text color:", textColor, "Background:", cardBg);
+
+    // Destroy existing chart if it exists
+    if (this.statusChartInstance) {
+      this.statusChartInstance.destroy();
+      this.statusChartInstance = null;
+    }
+
+    // Count applications by status
+    const statusCounts = {
+      applied: this.applications.filter((app) => app.status === "applied")
+        .length,
+      interview: this.applications.filter((app) => app.status === "interview")
+        .length,
+      test: this.applications.filter((app) => app.status === "test").length,
+      offer: this.applications.filter((app) => app.status === "offer").length,
+      rejected: this.applications.filter((app) => app.status === "rejected")
+        .length,
+    };
+
+    // Only create chart if we have data
+    if (this.applications.length > 0) {
+      try {
+        // Clear any existing content
+        ctx.parentElement.innerHTML = '<canvas id="statusChart"></canvas>';
+        const newCtx = document.getElementById("statusChart");
+
+        this.statusChartInstance = new Chart(newCtx, {
+          type: "doughnut",
+          data: {
+            labels: ["Applied", "Interview", "Test", "Offer", "Rejected"],
+            datasets: [
+              {
+                data: [
+                  statusCounts.applied,
+                  statusCounts.interview,
+                  statusCounts.test,
+                  statusCounts.offer,
+                  statusCounts.rejected,
+                ],
+                backgroundColor: [
+                  "#3b82f6",
+                  "#f59e0b",
+                  "#8b5cf6",
+                  "#10b981",
+                  "#ef4444",
+                ],
+                borderWidth: 2,
+                borderColor: cardBg,
+              },
+            ],
+          },
+          options: {
+            color: textColor,
+            responsive: true,
+            maintainAspectRatio: false,
+            elements: {
+              arc: {
+                borderColor: cardBg,
+              },
+            },
+            plugins: {
+              legend: {
+                position: "bottom",
+                labels: {
+                  color: textColor,
+                  font: { size: 11 },
+                  padding: 15,
+                  usePointStyle: true,
+                },
+              },
+              tooltip: {
+                backgroundColor: cardBg,
+                titleColor: textColor,
+                bodyColor: textColor,
+                borderColor: lightBorder,
+                borderWidth: 1,
+              },
+            },
+            cutout: "60%",
+          },
+        });
+      } catch (error) {
+        console.error("Error creating status chart:", error);
+      }
+    } else {
+      // Show no data message
+      const container = ctx.parentElement;
+      if (container) {
+        container.innerHTML = `
+                <div class="no-data" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                    <div>
+                        <p>No data available</p>
+                        <p style="font-size: 0.8rem; margin-top: 0.5rem;">Add applications to see status distribution</p>
+                    </div>
+                </div>
+            `;
+      }
+    }
   }
 
+  // Update timeline chart
+  updateTimelineChart() {
+    const ctx = document.getElementById("weeklyChart");
+    if (!ctx) return;
+
+    // More reliable theme detection
+    const isDarkMode = document.body.classList.contains("dark-mode");
+    console.log("Timeline Chart - Dark mode detected:", isDarkMode);
+
+    // Use direct color values for better reliability
+    const textColor = isDarkMode ? "#f1f5f9" : "#1e293b";
+    const cardBg = isDarkMode ? "#1e293b" : "#ffffff";
+    const lightBorder = isDarkMode
+      ? "rgba(255, 255, 255, 0.2)"
+      : "rgba(0, 0, 0, 0.1)";
+    const gridColor = isDarkMode
+      ? "rgba(255, 255, 255, 0.1)"
+      : "rgba(0, 0, 0, 0.1)";
+
+    console.log(
+      "Timeline Chart - Text color:",
+      textColor,
+      "Background:",
+      cardBg
+    );
+
+    // Destroy existing chart if it exists
+    if (this.timelineChartInstance) {
+      this.timelineChartInstance.destroy();
+      this.timelineChartInstance = null;
+    }
+
+    // Get weekly statistics
+    const weeklyStats = this.getWeeklyStatistics();
+
+    // Convert to array and sort by date
+    const sortedWeeks = Object.values(weeklyStats)
+      .sort((a, b) => {
+        if (a.year !== b.year) return a.year - b.year;
+        return a.week - b.week;
+      })
+      .slice(-8); // Last 8 weeks
+
+    if (sortedWeeks.length > 0) {
+      try {
+        // Clear any existing content
+        ctx.parentElement.innerHTML = '<canvas id="weeklyChart"></canvas>';
+        const newCtx = document.getElementById("weeklyChart");
+
+        this.timelineChartInstance = new Chart(newCtx, {
+          type: "line",
+          data: {
+            labels: sortedWeeks.map((week) => `W${week.week} ${week.year}`),
+            datasets: [
+              {
+                label: "Applications",
+                data: sortedWeeks.map((week) => week.count),
+                borderColor: "#6366f1",
+                backgroundColor: isDarkMode
+                  ? "rgba(99, 102, 241, 0.3)"
+                  : "rgba(99, 102, 241, 0.1)",
+                tension: 0.4,
+                fill: true,
+                pointBackgroundColor: "#6366f1",
+                pointBorderColor: cardBg,
+                pointBorderWidth: 2,
+                pointRadius: 4,
+                pointHoverRadius: 6,
+              },
+            ],
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            plugins: {
+              legend: {
+                display: false,
+              },
+              tooltip: {
+                backgroundColor: cardBg,
+                titleColor: textColor,
+                bodyColor: textColor,
+                borderColor: lightBorder,
+                borderWidth: 1,
+              },
+            },
+            scales: {
+              x: {
+                grid: {
+                  color: gridColor,
+                },
+                ticks: {
+                  color: textColor,
+                  maxRotation: 0,
+                  font: {
+                    size: 11,
+                  },
+                },
+              },
+              y: {
+                beginAtZero: true,
+                grid: {
+                  color: gridColor,
+                },
+                ticks: {
+                  color: textColor,
+                  stepSize: 1,
+                  font: {
+                    size: 11,
+                  },
+                },
+              },
+            },
+          },
+        });
+      } catch (error) {
+        console.error("Error creating timeline chart:", error);
+      }
+    } else {
+      // Show no data message
+      ctx.parentElement.innerHTML = `
+            <div class="no-data" style="height: 200px; display: flex; align-items: center; justify-content: center;">
+                <div>
+                    <p>No data available</p>
+                    <p style="font-size: 0.8rem; margin-top: 0.5rem;">Add applications to see timeline</p>
+                </div>
+            </div>
+        `;
+    }
+  }
   // Month Filtering System
   setupFiltering() {
     const monthFilter = document.getElementById("month-filter");
