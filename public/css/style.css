@@ -757,8 +757,7 @@ main {
 #applications-page .filters {
     display: flex;
     align-items: end;
-    gap: 1rem;
-    margin-bottom: 1.5rem;
+    gap: .8rem;
     flex-wrap: wrap;
 }
 
@@ -785,12 +784,41 @@ main {
     width: 100%;
 }
 
+/* Search input with icon */
+.search-input-wrapper {
+    position: relative;
+    width: 100%;
+}
+
+.search-input-wrapper .search-icon {
+    position: absolute;
+    left: 12px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--text-muted);
+    font-size: 1rem;
+    z-index: 2;
+    pointer-events: none;
+}
+
+.search-input-wrapper .form-control {
+    padding-left: 2rem;
+    /* Space for the icon */
+    width: 100%;
+}
+
+/* Dark mode adjustment for search icon */
+.dark-mode .search-input-wrapper .search-icon {
+    color: var(--text-muted);
+}
+
 /* Fix Applications Page Table - Make it like Dashboard */
 #applications-page .table-container {
     /* overflow-x: auto; */
     /* Keep scrolling for very small screens */
     /* min-width: 0; */
     /* Remove minimum width constraint */
+    margin-top: 0;
     overflow-x: auto;
     border-radius: 20px;
     width: 100%;
@@ -1962,6 +1990,12 @@ footer {
 
     .form-actions {
         flex-direction: column;
+    }
+
+    #applications-page .filters {
+        flex-direction: column;
+        align-items: stretch;
+        gap: 0.8rem;
     }
 
     .statistics-section .filter-controls .form-group {
