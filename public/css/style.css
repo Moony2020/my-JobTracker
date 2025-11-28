@@ -1114,6 +1114,10 @@ main {
     color: white;
 }
 
+.status-canceled {
+    background: linear-gradient(135deg, #6b7280, #9ca3af);
+    color: white;
+}
 
 /* Forms */
 .form-section {
@@ -1319,6 +1323,11 @@ main {
 
 .status-rejected {
     background: linear-gradient(135deg, #ef4444, #f87171);
+    color: white;
+}
+
+.status-canceled {
+    background: linear-gradient(135deg, #6b7280, #9ca3af);
     color: white;
 }
 
@@ -1931,7 +1940,8 @@ footer {
     .status-interview,
     .status-test,
     .status-offer,
-    .status-rejected {
+    .status-rejected,
+    .status-canceled {
         display: inline-flex !important;
         align-items: center !important;
         justify-content: center !important;

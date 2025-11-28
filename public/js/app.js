@@ -249,7 +249,7 @@ class ApplicationManager {
 
   async handleUpdateApplication(e) {
     e.preventDefault();
-
+    console.log("=== UPDATE APPLICATION STARTED ===");
     if (!authManager.isAuthenticated()) {
       uiManager.showNotification(
         "Please login to update applications",
@@ -267,7 +267,7 @@ class ApplicationManager {
       status: document.getElementById("edit-status").value,
       notes: document.getElementById("edit-notes").value,
     };
-
+    console.log("Form Data being sent:", formData); // Debug log
     // Basic validation
     if (!formData.jobTitle || !formData.company || !formData.date) {
       uiManager.showNotification("Please fill in all required fields", "error");
@@ -782,6 +782,8 @@ class ApplicationManager {
       offer: this.applications.filter((app) => app.status === "offer").length,
       rejected: this.applications.filter((app) => app.status === "rejected")
         .length,
+      canceled: this.applications.filter((app) => app.status === "canceled")
+        .length,
     };
 
     // Only create chart if we have data
@@ -803,6 +805,7 @@ class ApplicationManager {
                   statusCounts.test,
                   statusCounts.offer,
                   statusCounts.rejected,
+                  statusCounts.canceled,
                 ],
                 backgroundColor: [
                   "#3b82f6",
@@ -810,6 +813,7 @@ class ApplicationManager {
                   "#8b5cf6",
                   "#10b981",
                   "#ef4444",
+                  "#6b7280",
                 ],
                 borderWidth: 2,
                 borderColor: cardBg,
@@ -1124,6 +1128,7 @@ class ApplicationManager {
       test: "Test",
       offer: "Offer",
       rejected: "Rejected",
+      canceled: "Canceled",
     };
     return statusMap[status] || status;
   }

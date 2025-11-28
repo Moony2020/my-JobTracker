@@ -369,6 +369,7 @@ class UIManager {
       test: "Test",
       offer: "Offer",
       rejected: "Rejected",
+      canceled: "Canceled",
     };
     return statusMap[status] || status;
   }

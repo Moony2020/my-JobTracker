@@ -32,9 +32,16 @@ const ApplicationSchema = new mongoose.Schema(
       type: String,
       required: true,
       enum: {
-        values: ["applied", "interview", "test", "offer", "rejected"],
+        values: [
+          "applied",
+          "interview",
+          "test",
+          "offer",
+          "rejected",
+          "canceled",
+        ],
         message:
-          "Status must be one of: applied, interview, test, offer, rejected",
+          "Status must be one of: applied, interview, test, offer, rejected, canceled",
       },
       default: "applied",
     },
