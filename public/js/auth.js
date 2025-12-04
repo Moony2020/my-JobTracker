@@ -56,6 +56,7 @@ class AuthManager {
     }
 
     try {
+      window.uiManager?.setLoading(true); // Show loader
       const response = await fetch("/api/auth/login", {
         method: "POST",
         headers: {
@@ -82,6 +83,8 @@ class AuthManager {
       }
     } catch (error) {
       uiManager.showNotification("Network error. Please try again.", "error");
+    } finally {
+      window.uiManager?.setLoading(false); // Hide loader
     }
   }
 

@@ -18,11 +18,22 @@ class UIManager {
     this.hamburgerBtn = document.getElementById("hamburgerBtn");
     this.mobileNav = document.getElementById("mobileNav");
     this.mobileNavLinks = document.querySelectorAll(".mobile-nav-link");
+    this.loader = document.getElementById("global-loader");
 
     this.currentDeleteId = null;
 
     this.initEventListeners();
     this.initTheme();
+  }
+
+  // Loader
+  setLoading(isLoading) {
+    if (!this.loader) return;
+    if (isLoading) {
+      this.loader.classList.remove("hidden");
+    } else {
+      this.loader.classList.add("hidden");
+    }
   }
 
   initEventListeners() {
@@ -301,6 +312,7 @@ class UIManager {
   // Logout Handler
   async handleLogout() {
     try {
+      this.setLoading(true); // Show loader
       const response = await fetch("/api/auth/logout", {
         method: "POST",
         headers: {
@@ -316,11 +328,16 @@ class UIManager {
         this.showPage("dashboard");
         // Reload applications to clear user data
         if (window.applicationManager) {
-          window.applicationManager.loadApplications();
+          await window.applicationManager.loadApplications();
         }
+      } else {
+        this.showNotification("Error logging out", "error");
       }
     } catch (error) {
       this.showNotification("Error logging out", "error");
+    } finally {
+      // Hide loader
+      this.setLoading(false);
     }
   }
 

@@ -200,6 +200,9 @@ class ApplicationManager {
     }
 
     try {
+      // Show loading spinner before sending the request
+      uiManager.setLoading(true);
+
       const token = authManager.getToken();
       console.log(
         "Sending request to API with token:",
@@ -221,12 +224,14 @@ class ApplicationManager {
       if (response.ok) {
         const newApplication = await response.json();
         console.log("New application created:", newApplication);
+
         this.applications.push(newApplication);
         this.applicationForm.reset();
         this.setDefaultDate(); // Reset date to today
         this.filterApplications(); // Use filter instead of updateUI for Applications page
-        this.updateDashboard(); // Still update dashboard stats
-        this.updateStatisticsPage(); // Still update statistics
+        this.updateDashboard(); // Update dashboard stats
+        this.updateStatisticsPage(); // Update statistics
+
         uiManager.showNotification(
           "Application added successfully!",
           "success"
@@ -244,6 +249,9 @@ class ApplicationManager {
     } catch (error) {
       console.error("Network error:", error);
       uiManager.showNotification("Network error. Please try again.", "error");
+    } finally {
+      // hide spinner after request is done
+      uiManager.setLoading(false);
     }
   }
 
