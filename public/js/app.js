@@ -286,6 +286,7 @@ class ApplicationManager {
       notes: document.getElementById("edit-notes").value,
     };
     console.log("Form Data being sent:", formData); // Debug log
+
     // Basic validation
     if (!formData.jobTitle || !formData.company || !formData.date) {
       uiManager.showNotification("Please fill in all required fields", "error");
@@ -293,6 +294,10 @@ class ApplicationManager {
     }
 
     try {
+      // hide/close modal directly and show loading spinner
+      uiManager.hideAllModals();
+      uiManager.setLoading(true);
+
       const token = authManager.getToken();
       const response = await fetch(`/api/applications/${applicationId}`, {
         method: "PUT",
@@ -329,7 +334,11 @@ class ApplicationManager {
         );
       }
     } catch (error) {
+      console.error("Update error:", error);
       uiManager.showNotification("Network error. Please try again.", "error");
+    } finally {
+      // hide spinner after request is done
+      uiManager.setLoading(false);
     }
   }
 
@@ -343,6 +352,8 @@ class ApplicationManager {
     }
 
     try {
+      // hide/close modal directly and show loading spinner
+      uiManager.setLoading(true);
       const token = authManager.getToken();
       const response = await fetch(`/api/applications/${id}`, {
         method: "DELETE",
@@ -365,7 +376,11 @@ class ApplicationManager {
         uiManager.showNotification("Failed to delete application", "error");
       }
     } catch (error) {
+      console.error("Delete error:", error);
       uiManager.showNotification("Network error. Please try again.", "error");
+    } finally {
+      // hide spinner after request is done
+      uiManager.setLoading(false);
     }
   }
 
