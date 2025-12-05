@@ -1418,54 +1418,63 @@ main {
     color: white;
 }
 
-/* Action Buttons */
+/* Action Buttons Container */
 .action-buttons {
     display: flex;
     gap: 0.5rem;
     align-items: center;
     justify-content: flex-start;
     flex-wrap: nowrap;
-    /* Prevent buttons from wrapping */
-    min-width: 120px;
-    /* Ensure minimum width for action column */
+    /* Keep them on one line */
+    min-width: 80px;
+    /* Smaller now, because icons */
 }
 
+/* Base icon button style */
 .btn-action {
-    padding: 0.6rem 1.2rem;
+    width: 34px;
+    height: 34px;
     border: none;
-    border-radius: 8px;
-    font-size: 0.8rem;
-    font-weight: 600;
+    border-radius: 999px;
+    /* Fully round */
     cursor: pointer;
-    transition: all 0.3s ease;
-    white-space: nowrap;
-    /* Prevent button text from wrapping */
-    min-width: 60px;
-    /* Ensure consistent button width */
-    text-align: center;
     display: inline-flex;
     align-items: center;
     justify-content: center;
+    padding: 0;
+    /* No text padding, pure icon */
+    transition: all 0.2s ease;
+    white-space: nowrap;
+    text-align: center;
+    font-size: 1rem;
 }
 
+/* Make sure clicks always hit the button, not the <i> */
+.btn-action i {
+    pointer-events: none;
+    font-size: 1.1rem;
+}
+
+/* Edit icon button */
 .btn-edit {
     background: linear-gradient(135deg, #f59e0b, #fbbf24);
-    color: white;
+    color: #ffffff;
 }
 
 .btn-edit:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.35);
 }
 
+/* Delete icon button */
 .btn-delete {
     background: linear-gradient(135deg, #ef4444, #f87171);
-    color: white;
+    color: #ffffff;
 }
 
 .btn-delete:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.3);
+    transform: translateY(-2px) scale(1.03);
+    box-shadow: 0 4px 12px rgba(239, 68, 68, 0.35);
 }
 
 /* Modern Modals */

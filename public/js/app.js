@@ -160,12 +160,22 @@ class ApplicationManager {
         <td><span class="status-badge status-${
           app.status
         }">${this.getStatusText(app.status)}</span></td>
-        <td class="action-buttons">
-          <button class="btn-action btn-edit" data-id="${app._id}">Edit</button>
-          <button class="btn-action btn-delete" data-id="${
-            app._id
-          }">Delete</button>
-        </td>
+    <td class="action-buttons">
+      <button 
+        class="btn-action icon-button btn-edit" 
+        data-id="${app._id}" 
+        title="Edit application" 
+        aria-label="Edit application">
+        <i class="ri-edit-2-line"></i>
+      </button>
+      <button 
+        class="btn-action icon-button btn-delete" 
+        data-id="${app._id}" 
+        title="Delete application" 
+        aria-label="Delete application">
+        <i class="ri-delete-bin-6-line"></i>
+       </button>
+    </td>
       `;
       allApplicationsBody.appendChild(row);
     });
@@ -418,17 +428,34 @@ class ApplicationManager {
     this.updateRecentApplications();
   }
 
-  // Get this week's applications
+  // Get this week's applications (week starts on Monday - European style)
   getThisWeekApplications() {
     const today = new Date();
+
+    // Clone today's date so we don't mutate the original
     const startOfWeek = new Date(today);
-    startOfWeek.setDate(today.getDate() - today.getDay());
+
+    // Normalize time to the start of the day
     startOfWeek.setHours(0, 0, 0, 0);
 
+    // In JS: Sunday = 0, Monday = 1, ..., Saturday = 6
+    // We want Monday as the first day of the week.
+    let day = startOfWeek.getDay();
+    if (day === 0) {
+      // Treat Sunday as day 7 instead of 0
+      day = 7;
+    }
+
+    // Move back to Monday of the current week
+    // Example: if today is Wednesday (day = 3), go back (3 - 1) = 2 days
+    startOfWeek.setDate(startOfWeek.getDate() - (day - 1));
+
+    // End of week = Sunday 23:59:59.999
     const endOfWeek = new Date(startOfWeek);
     endOfWeek.setDate(startOfWeek.getDate() + 6);
     endOfWeek.setHours(23, 59, 59, 999);
 
+    // Count applications that fall within this Monday–Sunday window
     return this.applications.filter((app) => {
       const appDate = new Date(app.date);
       return appDate >= startOfWeek && appDate <= endOfWeek;
@@ -639,11 +666,25 @@ class ApplicationManager {
     });
   }
 
-  // Helper function to get the week number
+  // Helper function to get ISO-like week number (week starts on Monday)
   getWeekNumber(date) {
-    const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
-    const pastDaysOfYear = (date - firstDayOfYear) / 86400000;
-    return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
+    // Create a copy of the date in UTC to avoid timezone issues
+    const tmp = new Date(
+      Date.UTC(date.getFullYear(), date.getMonth(), date.getDate())
+    );
+
+    // In ISO weeks, week starts on Monday.
+    // Set tmp to the Thursday of the current week (ISO trick).
+    const day = tmp.getUTCDay() || 7; // Sunday (0) becomes 7
+    tmp.setUTCDate(tmp.getUTCDate() + 4 - day);
+
+    // First day of the year (in UTC)
+    const yearStart = new Date(Date.UTC(tmp.getUTCFullYear(), 0, 1));
+
+    // Calculate week number: number of weeks between yearStart and tmp
+    const weekNumber = Math.ceil(((tmp - yearStart) / 86400000 + 1) / 7);
+
+    return weekNumber;
   }
 
   updateRecentApplications() {
@@ -676,12 +717,22 @@ class ApplicationManager {
         <td><span class="status-badge status-${
           app.status
         }">${this.getStatusText(app.status)}</span></td>
-        <td class="action-buttons">
-          <button class="btn-action btn-edit" data-id="${app._id}">Edit</button>
-          <button class="btn-action btn-delete" data-id="${
-            app._id
-          }">Delete</button>
-        </td>
+      <td class="action-buttons">
+       <button 
+        class="btn-action icon-button btn-edit" 
+        data-id="${app._id}" 
+        title="Edit application" 
+        aria-label="Edit application">
+        <i class="ri-edit-2-line"></i>
+       </button>
+       <button 
+        class="btn-action icon-button btn-delete" 
+        data-id="${app._id}" 
+        title="Delete application" 
+        aria-label="Delete application">
+        <i class="ri-delete-bin-6-line"></i>
+       </button>
+      </td>
       `;
       recentApplicationsBody.appendChild(row);
     });
@@ -692,16 +743,16 @@ class ApplicationManager {
   attachActionListeners() {
     // Edit buttons
     document.querySelectorAll(".btn-edit").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        const id = e.target.getAttribute("data-id");
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-id");
         this.editApplication(id);
       });
     });
 
     // Delete buttons
     document.querySelectorAll(".btn-delete").forEach((btn) => {
-      btn.addEventListener("click", (e) => {
-        const id = e.target.getAttribute("data-id");
+      btn.addEventListener("click", () => {
+        const id = btn.getAttribute("data-id");
         this.showDeleteConfirmation(id);
       });
     });
