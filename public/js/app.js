@@ -429,9 +429,12 @@ class ApplicationManager {
     const successRate =
       totalApplications > 0 ? (offers / totalApplications) * 100 : 0;
 
+    const thisMonthApplications = this.getThisMonthApplications();
+
     document.getElementById("total-applications").textContent =
       totalApplications;
     document.getElementById("this-week").textContent = thisWeekApplications;
+    document.getElementById("this-month").textContent = thisMonthApplications;
     document.getElementById("interviews").textContent = interviews;
     document.getElementById("success-rate").textContent =
       successRate.toFixed(1) + "%";
@@ -474,6 +477,21 @@ class ApplicationManager {
     return this.applications.filter((app) => {
       const appDate = new Date(app.date);
       return appDate >= startOfWeek && appDate <= endOfWeek;
+    }).length;
+  }
+
+  // Get this month's applications
+  getThisMonthApplications() {
+    const today = new Date();
+    const currentMonth = today.getMonth();
+    const currentYear = today.getFullYear();
+
+    return this.applications.filter((app) => {
+      const appDate = new Date(app.date);
+      return (
+        appDate.getMonth() === currentMonth &&
+        appDate.getFullYear() === currentYear
+      );
     }).length;
   }
 
@@ -606,28 +624,37 @@ class ApplicationManager {
       weekElement.className = "stat-item";
       weekElement.innerHTML = `
                 <div class="stat-header">
-                    <h4>Week ${week.week}, ${week.year}</h4>
+                    <h4><i class="ri-arrow-down-s-line"></i> Week ${
+                      week.week
+                    }, ${week.year}</h4>
                     <span class="stat-count">${week.count} applications</span>
                 </div>
-                <div class="applications-list">
-                    ${week.applications
-                      .map(
-                        (app) => `
-                        <div class="application-item">
-                            <span class="app-title">${app.jobTitle}</span>
-                            <span class="app-company">at ${app.company}</span>
-                            <span class="app-location">${
-                              app.location ? `in ${app.location}` : ""
-                            }</span>
-                            <span class="app-status status-${
-                              app.status
-                            }">${this.getStatusText(app.status)}</span>
-                        </div>
-                      `
-                      )
-                      .join("")}
+                <div class="stat-content">
+                    <div class="applications-list">
+                        ${week.applications
+                          .map(
+                            (app) => `
+                            <div class="application-item">
+                                <span class="app-title">${app.jobTitle}</span>
+                                <span class="app-company">at ${app.company}</span>
+                                <span class="app-location">${
+                                  app.location ? `in ${app.location}` : ""
+                                }</span>
+                                <span class="app-status status-${
+                                  app.status
+                                }">${this.getStatusText(app.status)}</span>
+                            </div>
+                          `
+                          )
+                          .join("")}
+                    </div>
                 </div>
             `;
+      weekElement
+        .querySelector(".stat-header")
+        .addEventListener("click", () => {
+          weekElement.classList.toggle("active");
+        });
       weeklyContainer.appendChild(weekElement);
     });
   }
@@ -655,28 +682,37 @@ class ApplicationManager {
       monthElement.className = "stat-item";
       monthElement.innerHTML = `
                 <div class="stat-header">
-                    <h4>${month.monthName}</h4>
+                    <h4><i class="ri-arrow-down-s-line"></i> ${
+                      month.monthName
+                    }</h4>
                     <span class="stat-count">${month.count} applications</span>
                 </div>
-                <div class="applications-list">
-                    ${month.applications
-                      .map(
-                        (app) => `
-                        <div class="application-item">
-                            <span class="app-title">${app.jobTitle}</span>
-                            <span class="app-company">at ${app.company}</span>
-                            <span class="app-date">${this.formatDate(
-                              app.date
-                            )}</span>
-                            <span class="app-status status-${
-                              app.status
-                            }">${this.getStatusText(app.status)}</span>
-                        </div>
-                    `
-                      )
-                      .join("")}
+                <div class="stat-content">
+                    <div class="applications-list">
+                        ${month.applications
+                          .map(
+                            (app) => `
+                            <div class="application-item">
+                                <span class="app-title">${app.jobTitle}</span>
+                                <span class="app-company">at ${app.company}</span>
+                                <span class="app-date">${this.formatDate(
+                                  app.date
+                                )}</span>
+                                <span class="app-status status-${
+                                  app.status
+                                }">${this.getStatusText(app.status)}</span>
+                            </div>
+                        `
+                          )
+                          .join("")}
+                    </div>
                 </div>
             `;
+      monthElement
+        .querySelector(".stat-header")
+        .addEventListener("click", () => {
+          monthElement.classList.toggle("active");
+        });
       monthlyContainer.appendChild(monthElement);
     });
   }
@@ -815,6 +851,9 @@ class ApplicationManager {
 
     // Update extended statistics for statistics page
     this.updateExtendedStatistics();
+
+    // Populate month filter dropdown
+    this.populateMonthFilter();
 
     // Update charts
     this.updateCharts();

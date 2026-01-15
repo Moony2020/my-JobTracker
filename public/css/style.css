@@ -587,8 +587,8 @@ main {
 /* Stats Cards */
 .stats-cards {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
-    gap: 1.5rem;
+    grid-template-columns: repeat(auto-fit, minmax(min(200px, 100%), 1fr));
+    gap: 1rem;
     margin: 1.2rem 0;
 }
 
@@ -702,7 +702,7 @@ main {
 .stats-container {
     display: flex;
     flex-direction: column;
-    gap: 1.5rem;
+    gap: 1rem;
 }
 
 .stat-item {
@@ -711,8 +711,7 @@ main {
     border-radius: 16px;
     padding: 1.5rem;
     transition: all 0.3s ease;
-    margin-bottom: 1rem;
-
+    margin-bottom: 0;
 }
 
 .stat-item,
@@ -799,9 +798,66 @@ main {
 
 .app-location {
     color: var(--text-muted);
-    font-size: 0.8rem;
-    font-style: italic;
-    min-width: 120px;
+    font-size: 0.85rem;
+    flex: 1;
+}
+
+/* Collapsible Stat Items */
+.stat-item {
+    cursor: pointer;
+    overflow: hidden;
+    padding: 0 !important; /* Reset padding to handle inner transitions */
+}
+
+.stat-header {
+    padding: 1.5rem;
+    margin-bottom: 0 !important;
+    transition: background 0.3s ease;
+    user-select: none;
+}
+
+.stat-item:hover .stat-header {
+    background: rgba(99, 102, 241, 0.05);
+}
+
+.stat-header h4 {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.stat-header h4 i {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    color: var(--primary-color);
+}
+
+.stat-item.active .stat-header h4 i {
+    transform: rotate(180deg);
+}
+
+.stat-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.4s cubic-bezier(0.4, 0, 0.2, 1), padding 0.3s ease;
+    background: rgba(15, 23, 42, 0.02);
+}
+
+.dark-mode .stat-content {
+    background: rgba(255, 255, 255, 0.01);
+}
+
+.stat-item.active .stat-content {
+    max-height: 2000px; /* Large enough to accommodate long lists */
+    padding: 1.5rem;
+    border-top: 1px solid var(--light-border);
+}
+
+.stat-item.active {
+    border-left: 4px solid var(--primary-color);
+}
+
+.stat-count {
+    pointer-events: none;
 }
 
 .app-date {
