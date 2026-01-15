@@ -438,6 +438,60 @@ header {
     box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
 }
 
+/* Global Icon Styling - Lighter Slate */
+i, .field-icon, .toggle-password {
+    color: #64748b; /* Lighter slate color for a softer look */
+    opacity: 1;
+    text-shadow: none;
+    transition: all 0.3s ease;
+}
+
+.dark-mode i, .dark-mode .field-icon, .dark-mode .toggle-password {
+    color: #94a3b8;
+}
+
+.input-with-icon {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+.input-with-icon .form-control {
+    padding-left: 3rem !important;
+    padding-right: 3rem !important;
+}
+
+.input-with-icon .field-icon {
+    position: absolute;
+    left: 1.2rem;
+    font-size: 1.1rem;
+    pointer-events: none;
+    z-index: 2;
+}
+
+#forgot-password {
+    color: var(--primary-color);
+    font-size: 0.85rem;
+    font-weight: 650; /* Made slightly bolder */
+    text-decoration: none;
+    transition: all 0.3s ease;
+}
+
+#forgot-password:hover {
+    text-decoration: underline;
+    opacity: 0.8;
+}
+
+.input-with-icon .toggle-password {
+    position: absolute;
+    right: 1.2rem;
+    font-size: 1.1rem;
+    cursor: pointer;
+    padding: 0.2rem;
+    z-index: 2;
+}
+
 /* Hamburger Menu */
 .hamburger {
     display: none;
@@ -1041,6 +1095,19 @@ main {
     gap: 0.4rem;
 }
 
+#changePasswordModal .btn {
+    padding: 0.6rem 1.2rem;
+    border-radius: 30px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: none;
+}
+
 #apply-month-filter:hover {
     transform: translateY(-2px);
     box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
@@ -1208,8 +1275,8 @@ main {
     font-style: italic;
     padding: 2rem 1rem;
     background: var(--glass-bg);
-    border-radius: 12px;
     border: 2px dashed var(--light-border);
+    border-radius: 12px;
 }
 
 .loading-message {
@@ -1312,22 +1379,23 @@ main {
     transform: translateY(-2px);
 }
 
-#application-form .btn-submit {
+.btn-submit {
+    width: 100%;
+    padding: 0.75rem 1.5rem;
     background: var(--primary-gradient);
     color: white;
-    padding: 1rem 2rem;
     border: none;
     border-radius: 12px;
-    font-size: 1rem;
     font-weight: 600;
+    font-size: 1rem;
     cursor: pointer;
     transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+    box-shadow: 0 4px 15px rgba(99, 102, 241, 0.2);
 }
 
-#application-form.btn-submit:hover {
+.btn-submit:hover {
     transform: translateY(-2px);
-    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.4);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.3);
 }
 
 .recent-applications,
@@ -1509,6 +1577,7 @@ main {
 .btn-action i {
     pointer-events: none;
     font-size: 1.1rem;
+    color: var(--text-muted); /* Use slate color for icons */
 }
 
 /* Edit icon button */
@@ -1559,10 +1628,10 @@ main {
     backdrop-filter: blur(30px);
     border: 1px solid var(--card-border);
     border-radius: 20px;
-    padding: .8rem;
-    margin: .5rem;
+    padding: 1.5rem;
+    margin: 0.5rem;
     width: 100%;
-    max-width: 420px;
+    max-width: 370px; /* Reduced by 10px for a tighter look */
     max-height: 85vh;
     /* Limit height */
     overflow-y: auto;
@@ -1617,8 +1686,8 @@ main {
 }
 
 .close-modal:hover {
-    color: var(--danger-color);
-    background: rgba(239, 68, 68, 0.1);
+    color: #475569; /* Dark silver */
+    background: #e2e8f0; /* Light silver */
 }
 
 .modal .form-grid {

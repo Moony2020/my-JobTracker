@@ -24,6 +24,7 @@ class UIManager {
 
     this.initEventListeners();
     this.initTheme();
+    this.initPasswordToggles();
   }
 
   // Loader
@@ -180,6 +181,24 @@ class UIManager {
     this.hideModals();
     this.closeMobileNav();
     document.body.classList.remove("mobile-nav-open");
+  }
+
+  initPasswordToggles() {
+    const toggles = document.querySelectorAll(".toggle-password");
+    toggles.forEach((toggle) => {
+      toggle.addEventListener("click", () => {
+        const targetId = toggle.getAttribute("data-target");
+        const passwordInput = document.getElementById(targetId);
+        if (passwordInput) {
+          const isPassword = passwordInput.getAttribute("type") === "password";
+          passwordInput.setAttribute("type", isPassword ? "text" : "password");
+
+          // Toggle icon class
+          toggle.classList.toggle("ri-eye-off-line", !isPassword);
+          toggle.classList.toggle("ri-eye-line", isPassword);
+        }
+      });
+    });
   }
 
   showEditModal(application) {
