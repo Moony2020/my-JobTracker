@@ -24,7 +24,10 @@ mongoose
     useUnifiedTopology: true,
   })
   .then(() => console.log("MongoDB connected successfully"))
-  .catch((err) => console.error("MongoDB connection error:", err));
+  .catch((err) => {
+    console.error("MongoDB connection error:", err);
+    console.error("TIP: Check if your MONGO_URI includes the database name (e.g., ...mongodb.net/jobtracker?...) and if your IP is whitelisted in MongoDB Atlas.");
+  });
 
 // Routes - Make sure these are properly mounted
 app.use("/api/auth", require("./routes/auth"));
