@@ -178,7 +178,7 @@ router.post('/forgot-password', [
             });
 
             const mailOptions = {
-                from: process.env.EMAIL_USER,
+                from: `"JobTracker" <${process.env.EMAIL_USER}>`,
                 to: user.email,
                 subject: 'JobTracker - Password Reset Request',
                 html: `
