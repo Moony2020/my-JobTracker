@@ -572,41 +572,9 @@ header {
     transform: translate(2px, 2px);
 }
 
-/* Theme Toggle */
-.theme-toggle {
-    background: transparent !important;
-    border: none !important;
-    color: var(--text-color);
-    width: 38px;
-    height: 38px;
-    border-radius: 10px;
-    display: flex;
-    font-size: 1.6rem;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    flex-shrink: 0;
-}
-
-.theme-toggle:hover {
-    transform: rotate(15deg);
-    background: rgba(99, 102, 241, 0.1) !important;
-    color: var(--primary-color) !important;
-}
-
-/* Logout Button with Icon */
 .logout-btn {
     padding: 0.5rem;
     width: 40px;
-    height: 30px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 10px;
-    align-items: center;
-    justify-content: center;
-    min-width: auto;
 }
 
 .logout-btn i {
@@ -2278,6 +2246,8 @@ footer {
     background: var(--primary-color);
 }
 
+
+
 /* Responsive Design */
 @media (max-width: 768px) {
     .container {
@@ -2292,21 +2262,6 @@ footer {
         display: none;
     }
 
-    /* hide auth buttons but show theme toggle button/icon*/
-    .auth-buttons .btn:not(.theme-toggle) {
-        display: none;
-    }
-
-    .user-menu {
-        display: none;
-    }
-
-    /* show theme toggle button/dark mode icon*/
-    .theme-toggle {
-        display: flex !important;
-        visibility: visible !important;
-        opacity: 1 !important;
-    }
 
     .header-content {
         gap: 1rem;
@@ -2429,13 +2384,6 @@ footer {
         max-width: none;
     }
 
-    /*  resize dark mode */
-    .theme-toggle {
-        width: 32px !important;
-        height: 32px !important;
-        font-size: 1.2rem !important;
-        border-radius: 8px !important;
-    }
 
     /*  resize hamburger menu */
     .hamburger {
@@ -2517,12 +2465,6 @@ footer {
         font-size: 1rem !important;
     }
 
-    .theme-toggle {
-        width: 30px !important;
-        height: 30px !important;
-        font-size: 1.1rem !important;
-        border-radius: 8px !important;
-    }
 
     .hamburger {
         width: 22px !important;

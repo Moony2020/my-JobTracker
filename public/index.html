@@ -4,7 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>JobTracker - Track Your Job Applications</title>
-    <link rel="stylesheet" href="css/style.css" />
+    <link rel="stylesheet" href="css/style.css?v=1.1" />
     <link rel="icon" type="image/png" href="favicon.png" />
     <link
       rel="stylesheet"
@@ -14,6 +14,101 @@
       href="https://cdn.jsdelivr.net/npm/remixicon@4.3.0/fonts/remixicon.css"
       rel="stylesheet"
     />
+    <style>
+      /* Header Theme Switch (Final Modern Refinement) */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 48px;
+        height: 24px;
+        flex-shrink: 0;
+        margin: 0 5px;
+      }
+
+      .switch input {
+        opacity: 0; width: 0; height: 0;
+      }
+
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0; left: 0; right: 0; bottom: 0;
+        background-color: #73C0FC;
+        transition: .4s;
+        border-radius: 30px;
+        border: 1px solid var(--glass-border);
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 19px;
+        width: 19px;
+        border-radius: 50%;
+        left: 2px;
+        bottom: 1.5px;
+        z-index: 2;
+        background-color: #f8fafc;
+        transition: .4s;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.15);
+      }
+
+      .sun svg {
+        position: absolute;
+        top: 3px;
+        left: 26px;
+        z-index: 1;
+        width: 18px;
+        height: 18px;
+        fill: #ffbb52;
+        stroke: #ffbb52;
+        stroke-width: 2.2;
+        stroke-linecap: round;
+      }
+
+      .moon svg {
+        fill: #73C0FC;
+        position: absolute;
+        top: 4px;
+        left: 4px;
+        z-index: 1;
+        width: 16px;
+        height: 16px;
+      }
+
+      .sun svg {
+        animation: rotate 15s linear infinite;
+        transform-origin: center center;
+      }
+
+      @keyframes rotate {
+        from { transform: rotate(0deg); }
+        to { transform: rotate(360deg); }
+      }
+
+      .moon svg {
+        animation: tilt 6s ease-in-out infinite;
+        transform-origin: center center;
+      }
+
+      @keyframes tilt {
+        0%, 100% { transform: rotate(0deg); }
+        50% { transform: rotate(12deg); }
+      }
+
+      .input:checked + .slider {
+        background-color: #183153;
+      }
+
+      .input:checked + .slider:before {
+        transform: translateX(23px);
+      }
+      
+      @media (max-width: 480px) {
+        .switch { transform: scale(0.85); }
+        .hamburger { margin-left: 12px; }
+      }
+    </style>
   </head>
 
   <body>
@@ -74,8 +169,8 @@
                   </button>
                 </div>
               </div>
-              <button class="theme-toggle" id="themeToggle">🌙</button>
-            </div>
+            </div> <!-- End of guestMenu -->
+
             <div id="userMenu" class="user-menu hidden">
                 <div class="user-dropdown">
                   <div class="user-badge" id="userBadge">
@@ -99,15 +194,27 @@
                     </button>
                   </div>
                 </div>
-              </div>
             </div>
 
-            <!-- Hamburger moved to right side -->
-            <button class="hamburger" id="hamburgerBtn">
-              <span></span>
-              <span></span>
-              <span></span>
-            </button>
+            <!-- User-Provided Theme Switch Refined (Persistent) -->
+            <label class="switch">
+              <input type="checkbox" id="themeToggle" class="input">
+              <span class="slider"></span>
+              <span class="sun">
+                <svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="5"></circle><line x1="12" y1="1" x2="12" y2="3"></line><line x1="12" y1="21" x2="12" y2="23"></line><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line><line x1="1" y1="12" x2="3" y2="12"></line><line x1="21" y1="12" x2="23" y2="12"></line><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line></svg>
+              </span>
+              <span class="moon">
+                <svg viewBox="0 0 24 24"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path></svg>
+              </span>
+            </label>
+          </div>
+
+          <!-- Hamburger moved to right side -->
+          <button class="hamburger" id="hamburgerBtn">
+            <span></span>
+            <span></span>
+            <span></span>
+          </button>
           </div>
         </div>
       </div>

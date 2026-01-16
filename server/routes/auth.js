@@ -82,7 +82,7 @@ router.post('/login', [
         const user = await User.findOne({ email });
         if (!user) {
             return res.status(400).json({ 
-                message: 'Invalid credentials' 
+                message: 'Wrong email or password' 
             });
         }
 
@@ -90,7 +90,7 @@ router.post('/login', [
         const isMatch = await user.comparePassword(password);
         if (!isMatch) {
             return res.status(400).json({ 
-                message: 'Invalid credentials' 
+                message: 'Wrong email or password' 
             });
         }
 

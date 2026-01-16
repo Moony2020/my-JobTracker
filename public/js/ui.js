@@ -41,7 +41,7 @@ class UIManager {
 
   initEventListeners() {
     // Theme toggle
-    this.themeToggle?.addEventListener("click", () => this.toggleTheme());
+    this.themeToggle?.addEventListener("change", () => this.toggleTheme());
 
     // Modal controls
     this.loginBtn?.addEventListener("click", () => this.showModal("loginModal"));
@@ -146,21 +146,25 @@ class UIManager {
   }
 
   initTheme() {
-    const darkMode = localStorage.getItem("darkMode") === "true";
-    if (darkMode) {
-      document.body.classList.add("dark-mode");
-      this.themeToggle.textContent = "☀️";
-    } else {
+    const savedTheme = localStorage.getItem("theme") || "dark";
+    if (savedTheme === "light") {
       document.body.classList.remove("dark-mode");
-      this.themeToggle.textContent = "🌙";
+      if (this.themeToggle) this.themeToggle.checked = false;
+    } else {
+      document.body.classList.add("dark-mode");
+      if (this.themeToggle) this.themeToggle.checked = true;
     }
   }
 
   toggleTheme() {
-    document.body.classList.toggle("dark-mode");
-    const isDarkMode = document.body.classList.contains("dark-mode");
-    localStorage.setItem("darkMode", isDarkMode);
-    this.themeToggle.textContent = isDarkMode ? "☀️" : "🌙";
+    const isDarkMode = this.themeToggle.checked;
+    if (isDarkMode) {
+      document.body.classList.add("dark-mode");
+      localStorage.setItem("theme", "dark");
+    } else {
+      document.body.classList.remove("dark-mode");
+      localStorage.setItem("theme", "light");
+    }
 
     // Refresh charts when theme changes
     setTimeout(() => {
