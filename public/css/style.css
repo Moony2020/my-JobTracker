@@ -1884,41 +1884,34 @@ main {
     flex: 1 1 200px;
 }
 
-/* Row 1: First four fields - Balanced and weighted to fill space */
+/* Row 1: First four fields - All in one row until space runs out */
 .form-grid .form-group:nth-child(1) {
-    flex: 5 1 250px; /* Job Title - Dominant growth */
+    flex: 1 1 250px; /* Job Title - Flexible growth */
 }
 .form-grid .form-group:nth-child(2) {
-    flex: 4 1 220px; /* Company - High growth */
+    flex: 1 1 200px; /* Company - Flexible growth */
 }
 .form-grid .form-group:nth-child(3) {
-    flex: 0 0 200px; /* Location - Fixed/Compact */
+    flex: 0 0 200px; /* Location - STRICTLY COMPACT */
+    max-width: 200px; /* Never allow to stretch */
 }
 .form-grid .form-group:nth-child(4) {
-    flex: 0 0 220px; /* Date - Widened a bit to fill gap */
+    flex: 0 0 160px; /* Date - STRICTLY COMPACT */
+    max-width: 160px; /* Never allow to stretch */
 }
 
-/* Precision breakpoints for compact wrapping */
-@media (max-width: 831px) {
-    .form-grid .form-group:nth-child(4) {
-        flex: 0 0 100%;
-        max-width: 200px; /* Stay compact on wrap */
-    }
-}
-
-@media (max-width: 786px) {
-    .form-grid .form-group:nth-child(3) {
-        flex: 0 0 100%;
-        max-width: 400px; /* Widened from 280px as requested */
-    }
-}
-
-/* Ensure mobile stacking remains tidy */
+/* Stacking for small mobile only */
 @media (max-width: 480px) {
     .form-grid .form-group:nth-child(1),
     .form-grid .form-group:nth-child(2) {
         flex: 1 1 100%;
         max-width: 100%;
+    }
+    /* Location and Date still keep their small widths for a tidy look */
+    .form-grid .form-group:nth-child(3),
+    .form-grid .form-group:nth-child(4) {
+        flex: 0 0 100%;
+        max-width: 200px;
     }
 }
 
