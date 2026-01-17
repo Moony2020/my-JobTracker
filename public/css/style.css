@@ -1857,7 +1857,7 @@ main {
 
 /* Forms */
 #dashboard-page .form-section {
-    max-width: 650px; /* Reduced to make it truly smaller */
+    max-width: 1050px; /* Increased to allow one-line layout on desktop */
     margin-right: auto;
 }
 
@@ -1873,9 +1873,42 @@ main {
 }
 
 .form-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(min(250px, 100%), 1fr));
+    display: flex;
+    flex-wrap: wrap;
     gap: 1rem;
+    align-items: flex-end; /* Align labels and inputs consistently */
+}
+
+/* Default flex for form groups - allow them to grow to fill gaps */
+.form-grid .form-group {
+    flex: 1 1 200px;
+}
+
+/* Row 1: First four fields - Balanced and weighted to fill space */
+.form-grid .form-group:nth-child(1) {
+    flex: 2.5 1 220px; /* Job Title - Increased weight */
+}
+.form-grid .form-group:nth-child(2) {
+    flex: 1.8 1 200px; /* Company */
+}
+.form-grid .form-group:nth-child(3) {
+    flex: 1.2 1 180px; /* Location */
+    max-width: 350px;  /* Compact wrapping */
+}
+.form-grid .form-group:nth-child(4) {
+    flex: 1.5 1 160px; /* Date - Heavier growth but capped */
+    max-width: 280px;  /* Compact wrapping as requested */
+}
+
+/* Row 2: Status - Force it to its own line as requested */
+.form-grid .form-group.select-group {
+    flex: 1 1 100%; /* Force new row */
+    margin-top: 0.5rem;
+}
+
+/* Keep the Status dropdown itself compact */
+.form-grid .form-group.select-group .select-wrapper {
+    max-width: 200px;
 }
 
 .form-group {
@@ -2559,7 +2592,8 @@ footer {
 }
 
 .full-width {
-    grid-column: 1 / -1;
+    /* grid-column: 1 / -1; -- Old Grid Rule */
+    flex: 1 1 100% !important; /* New Flex Rule */
 }
 
 .text-center {
