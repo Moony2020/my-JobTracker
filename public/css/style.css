@@ -1875,7 +1875,7 @@ main {
 .form-grid {
     display: flex;
     flex-wrap: wrap;
-    gap: 1rem;
+    gap: 0.6rem; /* Further reduced from 0.8rem */
     align-items: flex-end; /* Align labels and inputs consistently */
 }
 
@@ -1886,24 +1886,45 @@ main {
 
 /* Row 1: First four fields - Balanced and weighted to fill space */
 .form-grid .form-group:nth-child(1) {
-    flex: 2.5 1 220px; /* Job Title - Increased weight */
+    flex: 5 1 250px; /* Job Title - Dominant growth */
 }
 .form-grid .form-group:nth-child(2) {
-    flex: 1.8 1 200px; /* Company */
+    flex: 4 1 220px; /* Company - High growth */
 }
 .form-grid .form-group:nth-child(3) {
-    flex: 1.2 1 180px; /* Location */
-    max-width: 350px;  /* Compact wrapping */
+    flex: 0 0 200px; /* Location - Fixed/Compact */
 }
 .form-grid .form-group:nth-child(4) {
-    flex: 1.5 1 160px; /* Date - Heavier growth but capped */
-    max-width: 280px;  /* Compact wrapping as requested */
+    flex: 0 0 220px; /* Date - Widened a bit to fill gap */
+}
+
+/* Precision breakpoints for compact wrapping */
+@media (max-width: 831px) {
+    .form-grid .form-group:nth-child(4) {
+        flex: 0 0 100%;
+        max-width: 200px; /* Stay compact on wrap */
+    }
+}
+
+@media (max-width: 786px) {
+    .form-grid .form-group:nth-child(3) {
+        flex: 0 0 100%;
+        max-width: 400px; /* Widened from 280px as requested */
+    }
+}
+
+/* Ensure mobile stacking remains tidy */
+@media (max-width: 480px) {
+    .form-grid .form-group:nth-child(1),
+    .form-grid .form-group:nth-child(2) {
+        flex: 1 1 100%;
+        max-width: 100%;
+    }
 }
 
 /* Row 2: Status - Force it to its own line as requested */
 .form-grid .form-group.select-group {
     flex: 1 1 100%; /* Force new row */
-    margin-top: 0.5rem;
 }
 
 /* Keep the Status dropdown itself compact */
@@ -1912,12 +1933,12 @@ main {
 }
 
 .form-group {
-    margin-bottom: .7rem;
+    margin-bottom: .25rem; /* Further reduced from .4rem */
 }
 
 .form-group label {
     display: block;
-    margin-bottom: 0.5rem;
+    margin-bottom: 0.15rem; /* Further reduced from 0.3rem */
     font-weight: 600;
     color: var(--text-color);
 }
